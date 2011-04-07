@@ -1,0 +1,37 @@
+merged_turns.csv
+  This is the set of negotiation dialogues.  Each dialogue (identified as a 
+  "dyad", i.e. which pair of speakers) consists of a set of
+  numbered "thought units".  A single speaker turn may consist
+  of several thought units.  With each thought unit, we identify
+  the speaker (Wine or Grocery, depending on the role that person
+  was playing in the negotiation) along with the coder's annotation
+  for that thought unit.  (We might also refer to this
+  annotation as a "code" or a "label".)
+
+metadata.csv
+  This file contains metadata for each dyad.  See Imai and Gelfand (2010)
+  for explanations of these items.  Note that for numeric quantities, e.g.
+  cultural intelligence (CQ), the value in the table is the average value
+  for the two participants in the dyad.  We are investigating whether it
+  is possible to get these values broken out by individual partipants.
+  Also note that "joint profit" is the measure of success in the negotiation.
+
+First_speaker.txt
+  This file identifies, for each dyad, whether the first speaker in the dyad
+  is the American (A) or East Asian (E) participant, in case it is useful to
+  distinguish the origin of the participant when exploring features that might
+  help predict successful negotiations.
+
+Coding Manual 2006.doc
+  This is the coding manual for the human coders.  It explains in considerable
+  detail what the codes mean, and how speaker turns were broken up into
+  discrete "thought units".
+
+Payoff Schedule.doc
+  In case it's of interest, this is the payoff schedule, identifying the 
+  profit (in "points") for different outcomes of the negotiation on the
+  five dimensions under discussion. (See Imai and Gelfand (2010) for details.)
+
+FINAL GROCERY.doc
+FINAL WINE SHOP.doc
+  These were the instructions given to the participants.

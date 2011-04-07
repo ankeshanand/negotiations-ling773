@@ -1,0 +1,20 @@
+
+Please use these resources ONLY for your class project, and
+do not redistribute them or link to them on the Web.
+
+subjclueslen1-HLTEMNLP05*
+  This is the MPQA subjectivity lexicon from University of Pittsburgh.
+  See http://www.cs.pitt.edu/mpqa/.
+
+LIWC2007
+  This is Pennebaker's LIWC dictionary.  The top of the file defines a
+  set of word categories, e.g. "posemo" for positive emotion words.
+  The remainder of the file maps from words (actually word prefixes
+  in many cases, which is his way of capturing morphological variation)
+  to categories.  For example, 'account*' (which would match account,
+  accounts, accounting, accounted, etc.) is in just one class,
+  358 (money).
+
+
+
+

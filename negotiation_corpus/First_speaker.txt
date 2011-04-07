@@ -1,0 +1,64 @@
+<Dyad No 2> American
+<Dyad No 3> East Asian
+<Dyad No 4> American
+<Dyad No 5> East Asian
+<Dyad No 7> American
+<Dyad No 9> American
+<Dyad No 10> American
+<Dyad No 11> American
+<Dyad No 12> East Asian
+<Dyad No 13> American
+<Dyad No 14> East Asian
+<Dyad No 16> American
+<Dyad No 17> American
+<Dyad No 18> East Asian
+<Dyad No 19> American
+<Dyad No 20> American
+<Dyad No 21> American
+<Dyad No 22> American
+<Dyad No 24> American
+<Dyad No 25> American
+<Dyad No 26> American
+<Dyad No 27> American
+<Dyad No 28> American
+<Dyad No 29> East Asian
+<Dyad No 30> American
+<Dyad No 32> East Asian
+<Dyad No 33> East Asian
+<Dyad No 34> East Asian American
+<Dyad No 36> American
+<Dyad No 37> East Asian
+<Dyad No 38> East Asian
+<Dyad No 39> East Asian
+<Dyad No 40> American
+<Dyad No 41> American
+<Dyad No 43> American
+<Dyad No 44> American
+<Dyad No 45> American
+<Dyad No 46> East Asian
+<Dyad No 48> American
+<Dyad No 49> East Asian
+<Dyad No 50> American
+<Dyad No 51> East Asian
+<Dyad No 52> American
+<Dyad No 53> East Asian
+<Dyad No 54> American
+<Dyad No 55> East Asian
+<Dyad No 56> American
+<Dyad No 57> East Asian
+<Dyad No 58> East Asian
+<Dyad No 59> American
+<Dyad No 60> East Asian
+<Dyad No 62> East Asian
+<Dyad No 63> East Asian
+<Dyad No 64> East Asian
+<Dyad No 65> East Asian
+<Dyad No 66> American
+<Dyad No 68> East Asian
+<Dyad No 69> American
+<Dyad No 70> East Asian
+<Dyad No 71> American
+<Dyad No 72> American
+<Dyad No 73> East Asian
+<Dyad No 74> East Asian
+<Dyad No 75> East Asian
