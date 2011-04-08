@@ -30,6 +30,8 @@
 \usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
 \usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
 % These packages are all incorporated in the memoir class to one degree or another...
+\usepackage{amsmath,epsfig}
+\usepackage{amsthm, amssymb}
 
 %%% HEADERS & FOOTERS
 \usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
@@ -56,23 +58,62 @@
 \title{LING773 project proposal}
 \author{Peng Ye, Youngil Kim, Olivia Buzek}
 %\date{} % Activate to display a given date or no date (if empty),
-         % otherwise the current date is printed 
+         % otherwise the current date is printed
 
 \begin{document}
 \maketitle
 
-\section{First section}
+\section{Features}
+\subsection{Feature Extraction}  % by Peng
+This section introduces features we would like to explore.
 
-Your text goes here.
+\textbf{Codebook based feature}
+We can form a codebook of word or code (or unigrams) and a codebook of bigrams. Given a new negotiation dialogue, we can then compute two codeword distributions (or occurrences) and use them as feature vectors which will be later fed into a regression model.
 
-\subsection{A subsection}
+-	We can compute the distributions for the two persons separately or jointly.
 
-More text.
+-	If we compute codeword distributions for two persons separately, we may take a look at how the two distributions are different from each other and compute, say, KL-divergence between them as a new feature.
+
+\textbf{Information in metadata}
+mean age, negative experience, education, cultural intelligence, emotional intelligence, IQ, extroversion, openness
+
+\textbf{Other}
+Number of turns and length of dialogue: these two features would indicate whether the discussion is sufficient or not and the easiness of achieving agreement.
+
+\subsection{Feature selection}  % by Peng
+For feature selection, we may first divide dialogues into two classes, one with high joint profit and one with really low joint profit and find out the most discriminant unigrams and bigrams according to chi-square test and likelihood ratio test. These words will be used to form a codebook for computing the codebook based feature mentioned above.
+
+
+\section{Regression}
+\subsection{Regression model}  % by Peng
+The prediction of joint profit is a regression problem. We are going to try the following regression models for this task.
+1.	Regression using SVM
+2.	Sparse linear regression
+3.	Weighted Nearest Neighbor + non-linear regression
 
 % by Young
 \subsection{Methods for classification \& regression}
 Through the hypothesis 5 and 6 in the article basically given for this project, Imai and Gelfand illustrate that counting \textit{sequences of integrative information behaviors} and \textit{sequences of cooperative relationship management behaviors} could be a clue for predicting \textit{joint profit}, higher number of counter would produce higher joint profit.
 So, we can start the prediction with a classification task, predicting y = HIGH or LOW.  For this classification, we could use k-nearest neighbor algorithm. If the evaluation would be good we can classify dialogs into more levels of joint profit.\newline
 Consequently, we are planning to implement an improved regression equation to predict joint profit of given test dialog. Imai and Gelfand included reciprocal, complementary, and cooperative sequences in the regression equation. We are now thinking about sparse linear regression equation for our prediction.
+
+
+\section{Evaluation metrics} % by Peng
+\textbf{Evaluation of Classification Result}
+Consider of the problem of classifying dialogues into three different classes, 1. LOW, 2. MEDIUM and 3. HIGH, we denote the number of samples whose true label is $i$ and predicted label is $j$ as $N_{ij}$, $i,j=1,2,3$. The performance of our algorithm is evaluated with three metrics: overall classification accuracy, precision and recall for each class. The three metrics are defined as follows:
+
+\begin{equation*}
+accuracy = \frac{N_{11}+N_{22}+N_{33}}{\sum_{i,j}N_{ij}}
+\end{equation*}
+\begin{equation*}
+precision_{i}=\frac{N_{ii}}{N_{1i}+N_{2i}+N_{3i}}
+\end{equation*}
+\begin{equation*}
+recall_{i}=\frac{N_{ii}}{N_{i1}+N_{i2}+N_{i3}}
+\end{equation*}
+where $precision_i$ and $recall_i$ are precision and recall for class i.
+
+\textbf{Evaluation of Regression Result}
+Three metrics can be used to evaluate the performance of the objective quality assessment model. The first metric is Spearman rank-order correlation coefficient between predicted joint profit and true joint Profit. It is related to prediction monotonicity of a model. The second metric is Pearson linear correlation coefficient between predicted joint profit and true joint Profit. It is considered as a measure of prediction accuracy of a model. The third metric is root mean squared error (rmse) between predicted joint profit and true joint Profit.
 
 \end{document}
