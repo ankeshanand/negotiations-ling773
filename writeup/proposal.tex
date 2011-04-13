@@ -75,12 +75,10 @@ The data will be lowercased, punctuation removed, with non-ASCII characters remo
 
 % by Young
 \subsection{Classification}
-Through the hypothesis 5 and 6 in the article basically given for this project, Imai and Gelfand illustrate that counting \textit{sequences of integrative information behaviors} and \textit{sequences of cooperative relationship management behaviors} could be a clue for predicting \textit{joint profit}, higher number of counter would produce higher joint profit.
-So, we can start the prediction with a classification task, predicting y = HIGH or LOW.  For this classification, we could use k-nearest neighbor algorithm. If the evaluation would be good we can classify dialogs into more levels of joint profit.\newline
-Consequently, we are planning to implement an improved regression equation to predict joint profit of given test dialog. Imai and Gelfand included reciprocal, complementary, and cooperative sequences in the regression equation. We are now thinking about sparse linear regression equation for our prediction.
+We will first treat prediction as a classification problem, to determine which features will produce useful results.  We will classify ranges of joint profit into LOW, MEDIUM and HIGH, using k-nearest neighbors with k=3 to make the classification.
 
 \subsection{Regression model}  % by Peng
-The prediction of joint profit is a regression problem. We will compare the following regression models for this task:
+Once we have determined the feature set most predictive in the classification problem, we will predict joint profit more precisely.  The prediction of joint profit is a regression problem. We will compare the following regression models for this task:
 \begin{enumerate}
 \item Regression using SVM
 \item Sparse linear regression
@@ -91,19 +89,13 @@ The prediction of joint profit is a regression problem. We will compare the foll
 \subsection{Feature Extraction}  % by Peng
 We will test the predictive value of several features.
 
-\textbf{Uni- and bigrams:} 
+\begin{itemize}
+\item \textbf{Uni- and bigrams:} All unigrams and bigrams of tokens occurring in the dialogue will be used as features.  Unigrams and bigrams of codes for thought units will also be used.
 
-We can form a codebook of word or code (or unigrams) and a codebook of bigrams. Given a new negotiation dialogue, we can then compute two codeword distributions (or occurrences) and use them as feature vectors which will be later fed into a regression model.
+\item \textbf{Demographic metadata:} Mean age, negative experience, education, cultural intelligence, emotional intelligence, IQ, extroversion, openness
 
--	We can compute the distributions for the two persons separately or jointly.
-
--	If we compute codeword distributions for two persons separately, we may take a look at how the two distributions are different from each other and compute, say, KL-divergence between them as a new feature.
-
-\textbf{Demographic features} \\
-mean age, negative experience, education, cultural intelligence, emotional intelligence, IQ, extroversion, openness
-
-\textbf{Other}
-Number of turns and length of dialogue: these two features would indicate whether the discussion is sufficient or not and the easiness of achieving agreement.
+\item \textbf{Dialogue metadata:} Number of turns and length of dialogue: these two features would indicate whether the discussion is sufficient or not and the easiness of achieving agreement.
+\end{itemize}
 
 \subsection{Feature selection}  % by Peng
 For feature selection, we may first divide dialogues into two classes, one with high joint profit and one with really low joint profit and find out the most discriminant unigrams and bigrams according to chi-square test and likelihood ratio test. These words will be used to form a codebook for computing the codebook based feature mentioned above.
