@@ -55,7 +55,7 @@
 
 %%% The "real" document content comes below...
 
-\title{LING773 project proposal}
+\title{LING773 - Negotiations Project Proposal}
 \author{Peng Ye, Youngil Kim, Olivia Buzek}
 %\date{} % Activate to display a given date or no date (if empty),
          % otherwise the current date is printed
@@ -63,18 +63,43 @@
 \begin{document}
 \maketitle
 
+\section{Introduction} % by Olivia
+
+In this project, we will use feature engineering to better predict what the joint profit will be.  The first round will improve prediction using classification of dialogues into the broad categories LOW, MEDIUM, and HIGH.  The second round will attempt to predict the exact profits.  Our goal is to improve prediction without using any domain-specific features, such as the outcomes for the specific points addressed by the conversation partners in the Imai and Gelfand data.
+
+\section{Preprocessing} % by Olivia
+
+The data will be lowercased, punctuation removed, with non-ASCII characters removed, and tokenized.
+
+\section{Prediction models}
+
+% by Young
+\subsection{Classification}
+Through the hypothesis 5 and 6 in the article basically given for this project, Imai and Gelfand illustrate that counting \textit{sequences of integrative information behaviors} and \textit{sequences of cooperative relationship management behaviors} could be a clue for predicting \textit{joint profit}, higher number of counter would produce higher joint profit.
+So, we can start the prediction with a classification task, predicting y = HIGH or LOW.  For this classification, we could use k-nearest neighbor algorithm. If the evaluation would be good we can classify dialogs into more levels of joint profit.\newline
+Consequently, we are planning to implement an improved regression equation to predict joint profit of given test dialog. Imai and Gelfand included reciprocal, complementary, and cooperative sequences in the regression equation. We are now thinking about sparse linear regression equation for our prediction.
+
+\subsection{Regression model}  % by Peng
+The prediction of joint profit is a regression problem. We will compare the following regression models for this task:
+\begin{enumerate}
+\item Regression using SVM
+\item Sparse linear regression
+\item Weighted Nearest Neighbor + non-linear regression
+\end{enumerate}
+
 \section{Features}
 \subsection{Feature Extraction}  % by Peng
-This section introduces features we would like to explore.
+We will test the predictive value of several features.
 
-\textbf{Codebook based feature}
+\textbf{Uni- and bigrams:} 
+
 We can form a codebook of word or code (or unigrams) and a codebook of bigrams. Given a new negotiation dialogue, we can then compute two codeword distributions (or occurrences) and use them as feature vectors which will be later fed into a regression model.
 
 -	We can compute the distributions for the two persons separately or jointly.
 
 -	If we compute codeword distributions for two persons separately, we may take a look at how the two distributions are different from each other and compute, say, KL-divergence between them as a new feature.
 
-\textbf{Information in metadata}
+\textbf{Demographic features} \\
 mean age, negative experience, education, cultural intelligence, emotional intelligence, IQ, extroversion, openness
 
 \textbf{Other}
@@ -83,22 +108,7 @@ Number of turns and length of dialogue: these two features would indicate whethe
 \subsection{Feature selection}  % by Peng
 For feature selection, we may first divide dialogues into two classes, one with high joint profit and one with really low joint profit and find out the most discriminant unigrams and bigrams according to chi-square test and likelihood ratio test. These words will be used to form a codebook for computing the codebook based feature mentioned above.
 
-
-\section{Regression}
-\subsection{Regression model}  % by Peng
-The prediction of joint profit is a regression problem. We are going to try the following regression models for this task.
-1.	Regression using SVM
-2.	Sparse linear regression
-3.	Weighted Nearest Neighbor + non-linear regression
-
-% by Young
-\subsection{Methods for classification \& regression}
-Through the hypothesis 5 and 6 in the article basically given for this project, Imai and Gelfand illustrate that counting \textit{sequences of integrative information behaviors} and \textit{sequences of cooperative relationship management behaviors} could be a clue for predicting \textit{joint profit}, higher number of counter would produce higher joint profit.
-So, we can start the prediction with a classification task, predicting y = HIGH or LOW.  For this classification, we could use k-nearest neighbor algorithm. If the evaluation would be good we can classify dialogs into more levels of joint profit.\newline
-Consequently, we are planning to implement an improved regression equation to predict joint profit of given test dialog. Imai and Gelfand included reciprocal, complementary, and cooperative sequences in the regression equation. We are now thinking about sparse linear regression equation for our prediction.
-
-
-\section{Evaluation metrics} % by Peng
+\section{Evaluation and Baselines} % by Peng
 \textbf{Evaluation of Classification Result}
 Consider of the problem of classifying dialogues into three different classes, 1. LOW, 2. MEDIUM and 3. HIGH, we denote the number of samples whose true label is $i$ and predicted label is $j$ as $N_{ij}$, $i,j=1,2,3$. The performance of our algorithm is evaluated with three metrics: overall classification accuracy, precision and recall for each class. The three metrics are defined as follows:
 
