@@ -14,10 +14,7 @@
 
 %%% PAGE DIMENSIONS
 \usepackage{geometry} % to change the page dimensions
-\geometry{a4paper} % or letterpaper (US) or a5paper or....
-% \geometry{margins=2in} % for example, change the margins to 2 inches all round
-% \geometry{landscape} % set up the page for landscape
-%   read geometry.pdf for detailed page layout information
+\geometry{a4paper} % or letterpaper (US) or a5paper or
 
 \usepackage{graphicx} % support the \includegraphics command and options
 
@@ -95,27 +92,43 @@ We will test the predictive value of several features.
 \item \textbf{Demographic metadata:} Mean age, negative experience, education, cultural intelligence, emotional intelligence, IQ, extroversion, openness
 
 \item \textbf{Dialogue metadata:} Number of turns and length of dialogue: these two features would indicate whether the discussion is sufficient or not and the easiness of achieving agreement.
+
+\item \textbf{Repetition:} Thought units, dialogues, and all statements made by a single person will be analyzed for repetition of n-grams up to trigrams.  The fact that a person is repeating a phrase by a person may be informative even if the specific phrase is not informative over several dialogues in predicting joint profit.
+
 \end{itemize}
 
 \subsection{Feature selection}  % by Peng
-For feature selection, we may first divide dialogues into two classes, one with high joint profit and one with really low joint profit and find out the most discriminant unigrams and bigrams according to chi-square test and likelihood ratio test. These words will be used to form a codebook for computing the codebook based feature mentioned above.
+We will determine which features are the most informative according to a chi-square test and likelihood ratio test.  The best features will be used in the regression models.
 
 \section{Evaluation and Baselines} % by Peng
-\textbf{Evaluation of Classification Result}
-Consider of the problem of classifying dialogues into three different classes, 1. LOW, 2. MEDIUM and 3. HIGH, we denote the number of samples whose true label is $i$ and predicted label is $j$ as $N_{ij}$, $i,j=1,2,3$. The performance of our algorithm is evaluated with three metrics: overall classification accuracy, precision and recall for each class. The three metrics are defined as follows:
+\begin{itemize}
 
-\begin{equation*}
-accuracy = \frac{N_{11}+N_{22}+N_{33}}{\sum_{i,j}N_{ij}}
-\end{equation*}
-\begin{equation*}
-precision_{i}=\frac{N_{ii}}{N_{1i}+N_{2i}+N_{3i}}
-\end{equation*}
-\begin{equation*}
-recall_{i}=\frac{N_{ii}}{N_{i1}+N_{i2}+N_{i3}}
-\end{equation*}
-where $precision_i$ and $recall_i$ are precision and recall for class i.
+\item \textbf{Baseline}
+Our first baseline will be improving the prediction of joint profit against the Imai and Gelfand result.  The next baseline will be a simple regression based only on n-gram and demographic features.
 
-\textbf{Evaluation of Regression Result}
-Three metrics can be used to evaluate the performance of the objective quality assessment model. The first metric is Spearman rank-order correlation coefficient between predicted joint profit and true joint Profit. It is related to prediction monotonicity of a model. The second metric is Pearson linear correlation coefficient between predicted joint profit and true joint Profit. It is considered as a measure of prediction accuracy of a model. The third metric is root mean squared error (rmse) between predicted joint profit and true joint Profit.
+\item \textbf{Evaluation of Classification Result}
+We will evaluate the performance of our model according to overall classification accuracy, precision and recall for each class (LOW, MEDIUM and HIGH).
+
+
+%Consider of the problem of classifying dialogues into three different classes, 1. LOW, 2. MEDIUM and 3. HIGH, we denote the number of samples whose true label is $i$ and predicted label is $j$ as $N_{ij}$, $i,j=1,2,3$. The performance of our algorithm is evaluated with three metrics: overall classification accuracy, precision and recall for each class. The three metrics are defined as follows:
+
+%\begin{equation*}
+%accuracy = \frac{N_{11}+N_{22}+N_{33}}{\sum_{i,j}N_{ij}}
+%\end{equation*}
+%\begin{equation*}
+%precision_{i}=\frac{N_{ii}}{N_{1i}+N_{2i}+N_{3i}}
+%\end{equation*}
+%\begin{equation*}
+%recall_{i}=\frac{N_{ii}}{N_{i1}+N_{i2}+N_{i3}}
+%\end{equation*}
+%where $precision_i$ and $recall_i$ are precision and recall for class i.
+
+\item \textbf{Evaluation of Regression Result}
+Three metrics can be used to evaluate the performance of the objective quality assessment model. The first metric is Spearman rank-order correlation coefficient between predicted joint profit and true joint profit. It is related to prediction monotonicity of a model. The second metric is Pearson linear correlation coefficient between predicted joint profit and true joint Profit. It is considered as a measure of prediction accuracy of a model. The third metric is root mean squared error (rmse) between predicted joint profit and true joint profit.
+
+\item \textbf{Cross-validation}
+We will use 10-fold cross validation when obtaining any results.
+
+\end{itemize}
 
 \end{document}
