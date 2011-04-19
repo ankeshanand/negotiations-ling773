@@ -28,6 +28,7 @@ def subst_non_ascii(match):
 
 # tokenize string
 def tokenize( _str ) :
+    # in the following substitituion, the sequence is important.
     ret = re.sub('\s*\?\s*', " ?  ", 
 
           re.sub('\-', " ...  ", 
