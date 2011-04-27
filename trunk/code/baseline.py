@@ -10,7 +10,7 @@ meta_csv = csv.reader(meta_file,delimiter='\t')
 
 data = [w for w in data_csv]
 meta = [w for w in meta_csv]
-
+ 
 data_file.close()
 meta_file.close()
 
@@ -51,9 +51,9 @@ for key in ID:
     fv_dict[key].update(dict([('number-of-(%s)-wine' % w, len([a for a in tu_list_wine if a==w])) for w in code_set]))
     fv_dict[key].update(dict([('number-of-(%s)-grocery' % w, len([a for a in tu_list_grocery if a==w])) for w in code_set]))
     # Feature: number of thought unit
-    fv_dict[key]['number-of-though-unit'] = len(tu_list)
-    fv_dict[key]['number-of-though-unit-wine'] = len(tu_list_wine)
-    fv_dict[key]['number-of-though-unit-grocery'] = len(tu_list_grocery)
+    fv_dict[key]['number-of-thought-unit'] = len(tu_list)
+    fv_dict[key]['number-of-thought-unit-wine'] = len(tu_list_wine)
+    fv_dict[key]['number-of-thought-unit-grocery'] = len(tu_list_grocery)
     # Feature: Is the Wine speaker East Asian?
     fv_dict[key]['wine-is-East-Asian'] = 'East Asian' in [w[3] for w in dyad if w[2]=='Wine']
     # Feature: percentage of thought unit for each code
