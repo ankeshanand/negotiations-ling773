@@ -235,7 +235,7 @@ def create_ngram_ids():
         fdout.close()
 
 ########################################################
-# Main Proceduer
+# Main Procedure
 ########################################################
 initialize()
 make_whole_dialogs()
