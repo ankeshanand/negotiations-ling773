@@ -1,0 +1,101 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+\usepackage{amsmath,epsfig}
+\usepackage{amsthm, amssymb}
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+\usepackage{ textcomp }
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{LING773 - Negotiations Project Proposal}
+\author{Peng Ye, Youngil Kim, Olivia Buzek}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed
+
+\begin{document}
+\maketitle
+
+\section{Creating N-Grams}
+
+I created n-grams through following process.
+\begin{itemize}
+\item Preprocessing with raw data - creating \textit{fields\_speaker.txt}: \newline
+We analyzed \textit{merged\_turns.csv} and \textit{metadata.csv} for creating \textit{fields\_speaker.txt} file. Because some dialogues do not have \textit{joint profit} in \textit{metadata.csv} file, we should rule out those dialogues even though they exist in \textit{merged\_turns.csv} file. In addition, we rearranaged sequence of fields for better looking; the dyid is positioned as the first item.
+
+\item Tokeninzing with whole dialog files: \newline
+The raw data contains many special characters and not yet tokenized for creating n-grams. Basically, we used Treebank tokenization and this can be found in \textit{http://www.cis.upenn.edu/$\sim$treebank/tokenization.html}. Following list shows a part of the tokenization rules.
+\begin{itemize}
+\item most punctuation is split from adjoining words.
+\item verb contractions and the Anglo-Saxon genitive of nouns are split into their component morphemes, and each morpheme is tagged separately.
+\begin{itemize}
+\item Examples
+\begin{itemize}
+\item children's \textrightarrow children 's
+\item I'm \textrightarrow I 'm
+\end{itemize}
+\end{itemize}
+This tokenization allows us to analyze each component separately.\newline
+In addition, we need to correct some words to see more precise result. For example, some speakers omit \textit{question mark} or \textit{apostrophe}, and sometimes there are several special characters which is not interpretable in plain text. You can see the detailed conversion in \textit{tokenize} function in \textit{create\_ngram.py}.
+\end{itemize}
+\item Count n-grams and Create n-gram ID:\newline
+After tokenizing, we count number of n-grams to see the characteristics of each dialogue. For counting ngrams, we used \textit{count.pl} in Ted Pedersen’s Ngram Statics Package with general stop words because stop words can hide real characteristics of n-grams. We seperately count n-grams for Wine, Grocery, and all dialogues for seeing the characteristics of each group of speakers. Also, we count n-grams per each dyad too. \newline
+In addition, we created n-gram id files to express ngrams. For example, \textit{grand opening date} which is one of trigram is expressed as \textit{3-0001}. By using this ngram id, we can save memory and storage for analyzing whole data.
+\item Make n-gram feature file:\newline
+By using counted n-grams, we created n-gram feature file which can be converted into an ARFF format, input format of Weka. Each row in the file contains n-gram information of each dyad. The first column shows the \textit{dyID}, and the following colums show ngram id and the number of ngrams in the dialogues. Following example shows a part of the feature file. 
+\begin{itemize}
+\item Example
+\begin{verbatim}
+02,1-0002:30,1-0001:23,1-0040:18,1-0009:16,1-0012:15 ... ...
+03,1-0006:30,1-0001:29,1-0048:23,1-0026:21,1-0025:20 ... ...
+\end{verbatim}
+\end{itemize} 
+We made three n-gram feature files for each category, Wine, Grocery, and all dialogues.
+\end{itemize}
+\end{document}
