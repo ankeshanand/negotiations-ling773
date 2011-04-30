@@ -181,7 +181,7 @@ def create_ngram_files() :
 def create_ngram_file_catetory( category ) :
     global dyID_List
     
-    outfilename = res_dirname+"dialog_"+category+"_ngrams.cvs"
+    outfilename = res_dirname+"dialog_"+category+"_ngrams.csv"
     outfd = open( outfilename, "w")
 
     for dyID in dyID_List:
