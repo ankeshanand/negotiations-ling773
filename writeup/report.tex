@@ -52,9 +52,10 @@
 
 %%% END Article customizations
 
+
 %%% The "real" document content comes below...
 
-\title{LING773 - Negotiations Project Proposal}
+\title{LING773 - Negotiations Project Report}
 \author{Peng Ye, Youngil Kim, Olivia Buzek}
 %\date{} % Activate to display a given date or no date (if empty),
          % otherwise the current date is printed
@@ -62,9 +63,32 @@
 \begin{document}
 \maketitle
 
-\section{Creating N-Grams}
 
-I created n-grams through following process.
+\section{Introduction}
+brief introduction
+Who is in this group. Optionally, a rough breakdown of people's roles in the project,
+\section{Preprocessing}
+
+\section{Feature extraction}
+In this section, we will introduce three types of features that are extracted for predicting joint-profit.
+\subsection{Meta information}
+
+\subsection{Code-based N-Gram feature}
+In our data set, every thought unit is carefully coded by social scientist. The code of a thought unit is like a summary about this thought unit. It helps us to understand the functionality of a thought unit. Some code indicates positive interaction between speakers, for example, 'RP' means positive reaction; some code indicates negative interaction, for example, 'RN' means negative reaction. Intuitively, negative or positive interaction should have high correlation with joint profit, thus thought unit code is informative feature for predicting joint profit. The second type of feature we use is though unit code based feature. Consider a dyad as a sequence of code, we then extract code-based unigram and bigram as our featurs. Specifically, for each dyad we extract the following features:
+\begin{itemize}
+\item Unigram based features:
+\begin{itemize}
+\item Overall features: number of total thought units, number of thought units of each code, percentage of thought units of each code
+\item Wine features: number of total thought units (from wine part), number of thought units of each code, percentage of thought units of each code
+\item Grocery features: number of total thought units (from grocery part), number of thought units of each code, percentage of thought units of each annotation
+\end{itemize}
+\item Bigram based features:
+\end{itemize}
+
+
+
+\subsection{Word-based N-Gram feature}
+We extract word-based n-grams through following process.
 \begin{itemize}
 \item Preprocessing with raw data - creating \textit{fields\_speaker.txt}: \newline
 We analyzed \textit{merged\_turns.csv} and \textit{metadata.csv} for creating \textit{fields\_speaker.txt} file. Because some dialogues do not have \textit{joint profit} in \textit{metadata.csv} file, we should rule out those dialogues even though they exist in \textit{merged\_turns.csv} file. In addition, we rearranaged sequence of fields for better looking; the dyid is positioned as the first item.
@@ -85,7 +109,7 @@ This tokenization allows us to analyze each component separately.\newline
 In addition, we need to correct some words to see more precise result. For example, some speakers omit \textit{question mark} or \textit{apostrophe}, and sometimes there are several special characters which is not interpretable in plain text. You can see the detailed conversion in \textit{tokenize} function in \textit{create\_ngram.py}.
 \end{itemize}
 \item Count n-grams and Create n-gram ID:\newline
-After tokenizing, we count number of n-grams to see the characteristics of each dialogue. For counting ngrams, we used \textit{count.pl} in Ted Pedersen’s Ngram Statics Package with general stop words because stop words can hide real characteristics of n-grams. We seperately count n-grams for Wine, Grocery, and all dialogues for seeing the characteristics of each group of speakers. Also, we count n-grams per each dyad too. \newline
+After tokenizing, we count number of n-grams to see the characteristics of each dialogue. For counting ngrams, we used \textit{count.pl} in Ted Pedersen Ngram Statics Package with general stop words because stop words can hide real characteristics of n-grams. We seperately count n-grams for Wine, Grocery, and all dialogues for seeing the characteristics of each group of speakers. Also, we count n-grams per each dyad too. \newline
 In addition, we created n-gram id files to express ngrams. For example, \textit{grand opening date} which is one of trigram is expressed as \textit{3-0001}. By using this ngram id, we can save memory and storage for analyzing whole data.
 \item Make n-gram feature file:\newline
 By using counted n-grams, we created n-gram feature file which can be converted into an ARFF format, input format of Weka. Each row in the file contains n-gram information of each dyad. The first column shows the \textit{dyID}, and the following colums show ngram id and the number of ngrams in the dialogues. Following example shows a part of the feature file.
@@ -99,5 +123,22 @@ By using counted n-grams, we created n-gram feature file which can be converted 
 We made three n-gram feature files for each category, Wine, Grocery, and all dialogues.
 \end{itemize}
 
+
+
+
+\section{Regression}
+\subsection{Feature Selection}
+Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. 
+
+\subsection{Regression Algorithms}
+
+\subsection{Evaluation Metrics}
+
+
+
+\section{Experiment results}
+\subsection{Baseline Approach}
+
+\subsection{Improved Approach}
 
 \end{document}
