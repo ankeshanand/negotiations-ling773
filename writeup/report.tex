@@ -128,8 +128,37 @@ We made three n-gram feature files for each category, Wine, Grocery, and all dia
 
 \section{Regression}
 \subsection{Feature Selection}
-Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. 
+Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. In Weka, we use 'BestFirst' as search method and use 'CfsSubsetEval' as attribute evaluator for finding the most informative features. As is explained in Weka, 'CfsSubsetEval' evaluates ``the worth of a subset of attributes by considering the individual predictive ability of each feature along with the degree of redundancy between them'' and 'BestFirst' searches ``the space of attribute subsets by greedy hillclimbing augmented with a backtracking facility. Setting the number of consecutive non-improving nodes allowed controls the level of backtracking done.'' In our experiment, best first search start with the full set of attributes and search backward. The top ten best word based ngram feature is shown in Table.\ref{tab:selected_ngram} and the top ten best code based ngram feature is shown in Table.
+\begin{table}
+  \centering
+  \caption{THE TOP TEN MOST INFORMATIVE WORD-BASED AND CODE-BASED NGRAM FEATURE}
+  \begin{tabular}{|c|c|}
+     \hline
+CODE-BASED NGRAM FEATURE & WORD-BASED NGRAM \\
+  \hline
+percentage-of-(MIN-QR)-turns & hours \\
 
+percentage-of-(SF)-overall & special\\
+
+percentage-of-(SF)-grocery & great\\
+
+number-of-(IR)-overall & 30k\\
+
+percentage-of-(SBR-SF)-overall & agreeable\\
+
+percentage-of-(OM-QM)-wine & 630\\
+
+percentage-of-(MIN-IR)-wine & 1030pm\\
+
+percentage-of-(IP-SF)-grocery & luxurious\\
+
+percentage-of-(IP-IDN)-turn & people work\\
+
+percentage-of-(IDN-SBR)-turns & crust grocery\\
+  \hline
+  \end{tabular}\label{tab:selected_ngram}
+\end{table}
+ 
 \subsection{Regression Algorithms}
 
 \subsection{Evaluation Metrics}
