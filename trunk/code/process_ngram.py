@@ -16,7 +16,7 @@ num_trigram = 608
 
 # find valid ID
 
-meta_file = open("../resources/meta_fv.csv",'r')
+meta_file = open(meta_info_file,'r')
 meta_csv = csv.reader(meta_file,delimiter='\t')
 meta = [w for w in meta_csv]
 meta_file.close()
