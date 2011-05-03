@@ -5,14 +5,11 @@
 ################################################################
 import csv
 import os
+from global_variable import *
 
 ########################################################
 # Global Variables
 ########################################################
-all_fv_file = '../results/dialog_all_ngrams'
-groc_fv_file = '../results/dialog_grocery_ngrams'
-wine_fv_file = '../results/dialog_wine_ngrams'
-
 num_unigram = 2498
 num_bigram = 2648
 num_trigram = 608
@@ -76,8 +73,6 @@ def ngram_csv2arff(file_name):
 ngram_csv2arff(all_fv_file)
 ngram_csv2arff(groc_fv_file)
 ngram_csv2arff(wine_fv_file)
-    
-        
 
     
 
