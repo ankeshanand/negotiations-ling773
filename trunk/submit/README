@@ -1,0 +1,11 @@
+
+This code ....
+
+Dependencies :
+ We used Perl 5.10.1 for running the programs.
+ We used Python 2.6.5 for running the programs.
+ Make sure Ted Perdersen's Ngram Statics Package is installed, and the "bin"
+ directory exists in PATH. 
+ So, you should be able to run "count.pl" in your shell.
+
+
