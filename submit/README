@@ -1,11 +1,84 @@
+Desc : README file of codes for LING773 final Project
+       ( Peng Ye, Youngil Kim, Olivia Buzek )
 
-This code ....
+These codes build ARFF files, input file of the Weka, 
+we can predict joint profit through the result of Weka.
+See our writeup for details of the features that we used.
+These codes can be run on any platform as far as python & perl are installed.
 
 Dependencies :
- We used Perl 5.10.1 for running the programs.
- We used Python 2.6.5 for running the programs.
- Make sure Ted Perdersen's Ngram Statics Package is installed, and the "bin"
- directory exists in PATH. 
- So, you should be able to run "count.pl" in your shell.
+  We used Perl 5.10.1 for running the programs.
+  We used Python 2.6.5 for running the programs.
+  We installed Weka 3.6.4 for processing ARFF files.
+  Make sure Ted Perdersen's Ngram Statics Package is installed, and the "bin"
+  directory exists in PATH. So, you should be able to run "count.pl" without
+  specifiying any paths. ( it is used in "create_ngram.py" )
+
+  Before running the program you should check the directory structure.
+  All the programs should be in "code" directory and "resources" directory
+  should contain raw data. In addition, there should be "results" directory
+  for storing the result of programs. This structure is already contained
+  in this compressed file. So, just uncompressing the file will show the
+  directory structure.
+
+Basic directory structure :
+    <root> - README : this file
+           - codes/
+                   baseline.py 
+                   code_based_feature.py
+                   create_ngram.py
+                   feature_selection.py 
+                   global_variable.py 
+                   process_ngram.py 
+                   run_prediction.py
+                   stop-word.txt
+           - resources/
+                   fields_speaker.txt
+           - results/
+
+Program Descriptions :
+  create_ngram.py : Creating N-Gram csv files
+    input  : resources/fields_speaker.txt, stop-word.txt
+    output : 1_gram_ids.txt, 2_gram_ids.txt, 3_gram_ids.txt
+            dialog_wine_ngrams.csv, dialog_grocery_ngrams.csv,
+            dialog_all_ngrams.csv
+
+  baseline.py 
+    input  :
+    output :
+
+  code_based_feature.py
+    input  :
+    output :
+
+  feature_selection.py
+    input  :
+    output :
+
+  global_variable.py
+    input  :
+    output :
+
+  process_ngram.py
+    input  :
+    output :
+
+  run_prediction.py
+    input  :
+    output :
+
+How to run the programs :
+
+1. Build pre-processed resource file
+   <Peng : how to create fields_speaker.txt> 
+
+2. Build ngram csv & ngram id files 
+   Just runt "./create_ngram.py" without any arguments.
+   # ./create_ngram.py 
+
+3. Build ARFF files
+
+
+4. Using Weka
 
 
