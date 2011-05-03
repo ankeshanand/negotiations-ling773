@@ -74,5 +74,7 @@ ngram_csv2arff(all_fv_file)
 ngram_csv2arff(groc_fv_file)
 ngram_csv2arff(wine_fv_file)
 
-    
+
+cmd = 'cp %s > %s' % (file_name+'_new.csv', word_fv+'.csv')
+os.system(cmd)    
 

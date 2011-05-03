@@ -1,12 +1,32 @@
 # feature selection
+# and split data into training and testing set
 import csv
 import re
 import os
 from global_variable import *
 from operator import itemgetter, attrgetter
-meta_word_fv_f = '../results/fv_best_first_search_meta_ngramall.txt'
 
+# combine all extracted feature into one file and split into training and testing part
+# 1. code based feature
+f1  = '../results/code_fv.csv'
+# 2. word based feature
+f2 = '../results/word_fv.csv'
+# 3. meta feature
+f3 = '../results/meta.csv'
+# Feature selection result from weka
+meta_word_fv_f = '../results/fv_best_first_search_meta_ngramall.txt'
 meta_code_fv_f = '../results/fv_best_first_search_meta_codefv.txt'
+
+
+f1_reader = csv.reader(open(f1))
+f2_reader = csv.reader(open(f2))
+f3_reader = csv.reader(open(f3),delimiter = '\t')
+
+data1 = [w for w in f1_reader]
+data2 = [w for w in f2_reader]
+data3 = [w for w in f3_reader]
+
+
 
 def printbestfv(file,N):
     f = open(file,'r')
@@ -27,15 +47,7 @@ fv_name_1 = printbestfv(meta_code_fv_f,30)
 fv_name_2 = printbestfv(meta_word_fv_f,30)
 
 # combine the best features from two differernt set
-f1  = code_fv_file + '.csv'
-f2 = all_fv_file +'_new.csv'
-
-f1_reader = csv.reader(open(f1))
-f2_reader = csv.reader(open(f2))
-
-data1 = [w for w in f1_reader]
 h1 = data1[0]
-data2 = [w for w in f2_reader]
 h2 = data2[0]
 
 idx1 = [i for i in range(len(h1)) if h1[i] in fv_name_1]
@@ -45,9 +57,8 @@ data1_s = [[w[j] for j in idx1] for w in data1]
 data2_s = [[w[j] for j in idx2] for w in data2]
 
 # load meta data
-f3  = meta_fv_file + '.csv'
-f3_reader = csv.reader(open(f3),delimiter = '\t')
-data3 = [w for w in f3_reader]
+
+
 
 fv_all = [[]]*len(data3)
 
