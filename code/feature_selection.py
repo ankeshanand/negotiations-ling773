@@ -6,27 +6,6 @@ import os
 from global_variable import *
 from operator import itemgetter, attrgetter
 
-# combine all extracted feature into one file and split into training and testing part
-# 1. code based feature
-f1  = '../results/code_fv.csv'
-# 2. word based feature
-f2 = '../results/word_fv.csv'
-# 3. meta feature
-f3 = '../results/meta.csv'
-# Feature selection result from weka
-meta_word_fv_f = '../results/fv_best_first_search_meta_ngramall.txt'
-meta_code_fv_f = '../results/fv_best_first_search_meta_codefv.txt'
-
-
-f1_reader = csv.reader(open(f1))
-f2_reader = csv.reader(open(f2))
-f3_reader = csv.reader(open(f3),delimiter = '\t')
-
-data1 = [w for w in f1_reader]
-data2 = [w for w in f2_reader]
-data3 = [w for w in f3_reader]
-
-
 
 def printbestfv(file,N):
     f = open(file,'r')
@@ -43,8 +22,31 @@ def printbestfv(file,N):
     f.close()
     return fv_name
 
-fv_name_1 = printbestfv(meta_code_fv_f,30)
-fv_name_2 = printbestfv(meta_word_fv_f,30)
+# combine all extracted feature into one file and split into training and testing part
+# 1. code based feature
+f1  = '../results/code_fv_train.csv'
+# 2. word based feature
+f2 = '../results/word_fv_train.csv'
+# 3. meta feature
+f3 = '../results/meta_fv_train.csv'
+# Feature selection result from weka
+select_code_fv_f = '../results/fv_best_first_search_code_train.txt'
+select_word_fv_f = '../results/fv_best_first_search_word_train.txt'
+
+
+
+f1_reader = csv.reader(open(f1))
+f2_reader = csv.reader(open(f2))
+f3_reader = csv.reader(open(f3))
+
+data1 = [w for w in f1_reader]
+data2 = [w for w in f2_reader]
+data3 = [w for w in f3_reader]
+
+N = 30
+
+fv_name_1 = printbestfv(select_code_fv_f,N)
+fv_name_2 = printbestfv(select_word_fv_f,N)
 
 # combine the best features from two differernt set
 h1 = data1[0]
@@ -57,16 +59,13 @@ data1_s = [[w[j] for j in idx1] for w in data1]
 data2_s = [[w[j] for j in idx2] for w in data2]
 
 # load meta data
-
-
-
 fv_all = [[]]*len(data3)
 
 for i in range(len(data3)):
     print i
     fv_all[i] = data1_s[i]+ data2_s[i]+ data3[i]
     
-all_fv_f = '../results/all_fv_N30'
+all_fv_f = '../results/train_fv_N%d' % N
 f = open(all_fv_f+'.csv','w')
 f_writer = csv.writer(f)
 f_writer.writerows(fv_all)
