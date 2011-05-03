@@ -78,14 +78,45 @@ In our data set, every thought unit is carefully coded by social scientist. The 
 \begin{itemize}
 \item Unigram based features:
 \begin{itemize}
-\item Overall features: number of total thought units, number of thought units of each code, percentage of thought units of each code
-\item Wine features: number of total thought units (from wine part), number of thought units of each code, percentage of thought units of each code
-\item Grocery features: number of total thought units (from grocery part), number of thought units of each code, percentage of thought units of each annotation
+\item Overall features: (Overall features are extracted from the entire dyad.)
+
+      number of total thought units, number of thought units of each code, percentage of thought units of each code
+\item Wine features: (Wine features are extracted from wine part of the dyad)
+
+      number of total thought units (in wine part), number of thought units of each code, percentage of thought units of each code
+
+\item Grocery features: (Grocery features are extracted from grocery part of the dyad)
+
+number of total thought units (in grocery part), number of thought units of each code, percentage of thought units of each annotation
+
+\item Relative feature: Relative feature indicates the difference between wine part and grocery part of the dyad.
+
+J-S divergence between the unigram distribution over wine dialog and unigram distribution over grocery dialog
 \end{itemize}
 \item Bigram based features:
+\begin{itemize}
+\item Overall features: (Overall features are extracted from the entire dyad.)
+
+      number of turns (change of speakers) in the dyad, number of code-based bigram, percentage of code-based bigram
+\item Wine features: (Wine features are extracted from wine part of the dyad)
+
+      number of code-based bigram, percentage of code-based bigram
+\item Grocery features: (Grocery features are extracted from grocery part of the dyad)
+
+      number of code-based bigram, percentage of code-based bigram
+\item Turning point features: A turning point in a dyad is where the speaker changes. Features extracted at turning points indicate how one speaker respond the other speaker.
+
+      number of code-based bigram, percentage of code-based bigram
+
+\item Relative feature:
+
+      J-S divergence between the bigram distribution over wine dialog and bigram distribution over grocery dialog
+\end{itemize}
 \end{itemize}
 
+In our corpus, we have 38 code-based unigram and 660 code-based bigram. We extract a total of 5515 code-based features from each dyad.
 
+It is worth noting that features introduced above are redundant, for example the percentage of a unigram and the number of times a unigram occurred are correlated with each other and are only different by a constant factor, in the initial feature extraction part, we are not going to eliminate those redundant features, instead, we would like to collect as many features as possible and perform feature selection on these features to choose the most informative features. Feature selection would be illustrated in detail in next section.
 
 \subsection{Word-based N-Gram feature}
 We extract word-based n-grams through following process.
@@ -123,12 +154,11 @@ By using counted n-grams, we created n-gram feature file which can be converted 
 We made three n-gram feature files for each category, Wine, Grocery, and all dialogues.
 \end{itemize}
 
-
-
+In our experiment, we actually used only the n-gram extracted from entire dyad only. We have a total of 5754 word-based ngram features.
 
 \section{Regression}
 \subsection{Feature Selection}
-Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. In Weka, we use 'BestFirst' as search method and use 'CfsSubsetEval' as attribute evaluator for finding the most informative features. As is explained in Weka, 'CfsSubsetEval' evaluates ``the worth of a subset of attributes by considering the individual predictive ability of each feature along with the degree of redundancy between them'' and 'BestFirst' searches ``the space of attribute subsets by greedy hillclimbing augmented with a backtracking facility. Setting the number of consecutive non-improving nodes allowed controls the level of backtracking done.'' In our experiment, best first search start with the full set of attributes and search backward. The top ten best word based ngram feature is shown in Table.\ref{tab:selected_ngram} and the top ten best code based ngram feature is shown in Table.
+Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. In Weka, we use 'BestFirst' as search method and use 'CfsSubsetEval' as attribute evaluator for finding the most informative features. As is explained in Weka, 'CfsSubsetEval' evaluates ``the worth of a subset of attributes by considering the individual predictive ability of each feature along with the degree of redundancy between them'' and 'BestFirst' searches ``the space of attribute subsets by greedy hillclimbing augmented with a backtracking facility. Setting the number of consecutive non-improving nodes allowed controls the level of backtracking done.'' In our experiment, best first search start with the full set of attributes and search backward. The top ten best word based ngram feature is shown in Table.\ref{tab:selected_ngram} and the top ten best code based ngram feature is shown in Table. In this table, ``percentage-of-(MIN-QR)-turns'' means the percentage of the bigram of MIN-QR extracted from turning points of a dyad.
 \begin{table}
   \centering
   \caption{THE TOP TEN MOST INFORMATIVE WORD-BASED AND CODE-BASED NGRAM FEATURE}
@@ -158,16 +188,69 @@ percentage-of-(IDN-SBR)-turns & crust grocery\\
   \hline
   \end{tabular}\label{tab:selected_ngram}
 \end{table}
- 
+
+We extract the top 20 most informative code-based features and word-based feature, together with features extracted from meta information as the final feature. Specifically, we have a total of 49 features for each of the 61 dyads. It should be noticed that feature selection performed on all the available data may lead to overfitting problem, however, we would like to first perform feature selection on all data to see which features are the best for our current dataset. In the following experimental part, we will split dataset into training and testing part and feature selection would be only performed on training data to make sure we won't suffer overfitting problem.
+
 \subsection{Regression Algorithms}
+We used three different types of regression methods provided in Weka for predicting joint profit.
+\begin{itemize}
+\item weka.classifiers.functions.SMOreg: support vector machine for regression, and we use RBF kernel.
+\item weka.classifiers.functions.LinearRegression: using linear regression for prediction.
+\item weka.classifiers.meta.Bagging + weka.classifiers.trees.REPTree: bagging predictor based on REPTree which builds a regression tree using information gain.
+\end{itemize}
 
 \subsection{Evaluation Metrics}
+The following metrics are used to evaluate the proposed method.
 
+1. Correlation coefficient (CC)
+
+2. Mean absolute error (MAE)
+
+3. Root mean squared error (RMSE)
+
+4. Relative absolute error (RAE)
+
+5. Root relative squared error (RRSE)
 
 
 \section{Experiment results}
-\subsection{Baseline Approach}
+In this section, we will show the experimental results using the features obtained through the feature selection process and the three different regression methods. This result is compared to a baseline experiment, where code-based unigram features and meta information are directly used to form a 241-by-1 feature vector (without further feature selection process) for each dyad. Our experimental results show that using those selected features, we can achieve better performance. 
+\begin{table}
+  \centering
+  \caption{EXPERIMENT RESULTS WITH TEN FOLD CROSS-VALIDATION AND FEATURE SELECTION PERFORMED ON ALL DATA}
+  \begin{tabular}{|c|c|c|c|c|c|c|}
+     \hline
+         &       & CC & MAE & RMSE & RAE & RRSE\\
+     \hline
+     SVM & Baseline & 0.72  & 57.93  & 74.01  & 64.90\%  & 70.44\%\\
+         & Improved & 0.90  & 43.03  & 53.25  & 48.20\%  & 50.68\%\\
+     \hline
+  Linear & Baseline &  0.71 & 64.32  & 86.42  & 72.05\% & 82.25\%\\
+  Regression & Improved & 0.76  & 69.30  & 88.11  & 77.63\%  & 83.87\%  \\
+  \hline
+  REPTree & Baseline &  0.66 & 67.75  & 81.42  & 75.89\%  & 77.50\%\\
+  Bagging & Improved &  0.69 & 64.16  & 77.01  & 71.87\%  & 73.49\%\\
+  \hline
+  \end{tabular}\label{tab:result1}
+\end{table}
 
-\subsection{Improved Approach}
+\begin{table}
+  \centering
+  \caption{EXPERIMENT RESULTS WITH FIVE FOLD CROSS-VALIDATION AND FEATURE SELECTION PERFORMED ON ALL DATA}
+  \begin{tabular}{|c|c|c|c|c|c|c|}
+     \hline
+         &       & CC & MAE & RMSE & RAE & RRSE\\
+     \hline
+     SVM & Baseline & 0.68  & 66.33  & 83.57  & 74.15\%  & 79.63\%\\
+         & Improved & 0.89  & 44.31  & 54.41  & 49.53\%  & 51.85\%\\
+     \hline
+  Linear & Baseline &  0.67 & 70.47  & 90.95  & 78.77\% & 86.67\%\\
+  Regression & Improved & 0.53 & 82.82 & 105.08  & 92.58\%  & 100.13\%  \\
+  \hline
+  REPTree & Baseline &  0.51 & 73.06  & 89.84  & 81.67\%  & 85.61\%\\
+  Bagging & Improved &  0.69 & 62.44  & 78.01  & 69.80\%  & 74.34\%\\
+  \hline
+  \end{tabular}\label{tab:result1}
+\end{table}
 
 \end{document}

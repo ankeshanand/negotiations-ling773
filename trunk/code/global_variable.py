@@ -14,6 +14,7 @@ code_fv_file = '../results/code_fv'
 code_fv_file_s = '../results/code_fv_s.arff'
 
 # 3. word-based feature
+word_fv_file = '../results/word_fv'
 all_fv_file = '../results/dialog_all_ngrams'
 groc_fv_file = '../results/dialog_grocery_ngrams'
 wine_fv_file = '../results/dialog_wine_ngrams'
@@ -21,6 +22,7 @@ wine_fv_file = '../results/dialog_wine_ngrams'
 all_fv_file_s = '../results/dialog_all_ngrams_s.arff'
 groc_fv_file_s = '../results/dialog_grocery_ngrams_s.arff'
 wine_fv_file_s = '../results/dialog_wine_ngrams_s.arff'
+
 
 
 
