@@ -1,5 +1,6 @@
 # baseline
 import csv
+import os
 
 # load data
 data_file = open("../resources/fields_speaker.txt",'r')
@@ -69,3 +70,10 @@ for key in ID:
     fv_file_writer.writerow(fv_dict[key].values())
     
 csv_file.close()
+
+
+weka_cmd1 = 'java -cp weka.jar weka.core.converters.CSVLoader %s > %s' % ('../results/baseline_fv.csv', '../results/baseline_fv_d.arff')
+# convert dense arff file to sparse arff
+weka_cmd2 = 'java -cp weka.jar weka.filters.unsupervised.instance.NonSparseToSparse -i %s -o %s' % ('../results/baseline_fv_d.arff', '../results/baseline_fv.arff')
+os.system(weka_cmd1)
+os.system(weka_cmd2)

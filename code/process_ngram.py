@@ -10,13 +10,22 @@ from global_variable import *
 ########################################################
 # Global Variables
 ########################################################
+# input:
+all_fv_file = '../results/dialog_all_ngrams'
+meta_fv = meta_info_file
+# output:
+word_fv_file = '../results/word_fv'
+
+# groc_fv_file = '../results/dialog_grocery_ngrams'
+# wine_fv_file = '../results/dialog_wine_ngrams'
+
 num_unigram = 2498
 num_bigram = 2648
 num_trigram = 608
 
 # find valid ID
 
-meta_file = open(meta_info_file,'r')
+meta_file = open(meta_fv,'r')
 meta_csv = csv.reader(meta_file,delimiter='\t')
 meta = [w for w in meta_csv]
 meta_file.close()
@@ -58,23 +67,30 @@ def ngram_csv2arff(file_name):
         fv_csv.append(fv_temp)
     
     # write to a .csv file
-    f = open(file_name+'_new.csv','w')
+    f = open(word_fv_file+'.csv','w')
     f_writer = csv.writer(f)
-    f_writer.writerow(fv_name)
+    fv_csv = [fv_name] + fv_csv
+    # add joint profit to the last column of extracted feature
+    meta_reader = csv.reader(open(meta_fv),delimiter = '\t')
+    meta_data = [w for w in meta_reader]
+    for i in range(len(fv_csv)):
+        fv_csv[i] = fv_csv[i]+[meta_data[i][-1]]
+
     f_writer.writerows(fv_csv)
-    f.close() 
+    f.close()
+    
     # convert to arff file
-    weka_cmd1 = 'java -cp weka.jar weka.core.converters.CSVLoader %s > %s' % (file_name+'_new.csv', file_name+'_d.arff')
+    weka_cmd1 = 'java -cp weka.jar weka.core.converters.CSVLoader %s > %s' % (word_fv_file+'.csv', file_name+'_d.arff')
     # convert dense arff file to sparse arff
-    weka_cmd2 = 'java -cp weka.jar weka.filters.unsupervised.instance.NonSparseToSparse -i %s -o %s' % (file_name+'_d.arff', file_name+'_s.arff')
+    weka_cmd2 = 'java -cp weka.jar weka.filters.unsupervised.instance.NonSparseToSparse -i %s -o %s' % (file_name+'_d.arff', word_fv_file+'.arff')
     os.system(weka_cmd1)
     os.system(weka_cmd2)
     
 ngram_csv2arff(all_fv_file)
-ngram_csv2arff(groc_fv_file)
-ngram_csv2arff(wine_fv_file)
+# ngram_csv2arff(groc_fv_file)
+# ngram_csv2arff(wine_fv_file)
 
 
-cmd = 'cp %s > %s' % (file_name+'_new.csv', word_fv+'.csv')
-os.system(cmd)    
+# cmd = 'cp %s > %s' % (all_fv_file+'_new.csv', word_fv_file+'.csv')
+# os.system(cmd)    
 

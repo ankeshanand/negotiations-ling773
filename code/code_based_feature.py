@@ -14,8 +14,9 @@ from global_variable import *
 ########################################################
 # input:
 # corpus_file and meta_info_file is defined in global_variable.py
+meta_fv = meta_info_file
 data_file = open(corpus_file,'r')
-meta_file = open(meta_info_file,'r')
+meta_file = open(meta_fv,'r')
 # output: 
 fv_file = code_fv_file
 
@@ -144,7 +145,13 @@ for key in ID:
 ########################################################
 csv_file = open(fv_file+'.csv','w')
 fv_file_writer = csv.writer(csv_file)
-fv_file_writer.writerow(fv_name)
+fv = [fv_name] + fv
+# add joint-profit to the last element of the feature vector
+meta_reader = csv.reader(open(meta_fv),delimiter = '\t')
+meta_data = [w for w in meta_reader]
+for i in range(len(fv)):
+    fv[i] = fv[i]+[meta_data[i][-1]]
+
 fv_file_writer.writerows(fv)
 csv_file.close()
 
@@ -154,9 +161,11 @@ csv_file.close()
 ########################################################
 # convert csv file to dense arff file
 
+
+
 weka_cmd1 = 'java -cp weka.jar weka.core.converters.CSVLoader %s > %s' % (fv_file+'.csv', fv_file+'_d.arff')
 # convert dense arff file to sparse arff
-weka_cmd2 = 'java -cp weka.jar weka.filters.unsupervised.instance.NonSparseToSparse -i %s -o %s' % (fv_file+'_d.arff', fv_file+'_s.arff')
+weka_cmd2 = 'java -cp weka.jar weka.filters.unsupervised.instance.NonSparseToSparse -i %s -o %s' % (fv_file+'_d.arff', fv_file+'.arff')
 os.system(weka_cmd1)
 os.system(weka_cmd2)
 
