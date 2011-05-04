@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # global variables
 # input: negotiation corpus and meta information
 corpus_file = "../resources/fields_speaker.txt"

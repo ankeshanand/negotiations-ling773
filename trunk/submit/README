@@ -1,15 +1,24 @@
 Desc : README file of codes for LING773 final Project
        ( Peng Ye, Youngil Kim, Olivia Buzek )
 
-These codes build ARFF files, input file of the Weka, 
+These codes build ARFF files, input files of the Weka, 
 we can predict joint profit through the result of Weka.
 See our writeup for details of the features that we used.
 These codes can be run on any platform as far as python & perl are installed.
+python & perl could be run without specifying any path.
 
+We tested the programs on windows system with cygwin, and perl & python are 
+installed in "/usr/bin".
+
+
+------------------------------------------
 Dependencies :
+------------------------------------------
   We used Perl 5.10.1 for running the programs.
   We used Python 2.6.5 for running the programs.
   We installed Weka 3.6.4 for processing ARFF files.
+  Please copy "weka.jar" and "weka-src.jar" to "code" directory.
+
   Make sure Ted Perdersen's Ngram Statics Package is installed, and the "bin"
   directory exists in PATH. So, you should be able to run "count.pl" without
   specifiying any paths. ( it is used in "create_ngram.py" )
@@ -21,7 +30,10 @@ Dependencies :
   in this compressed file. So, just uncompressing the file will show the
   directory structure.
 
+
+------------------------------------------
 Basic directory structure :
+------------------------------------------
     <root> - README : this file
            - codes/
                    baseline.py 
@@ -34,9 +46,20 @@ Basic directory structure :
                    stop-word.txt
            - resources/
                    fields_speaker.txt
+                   meta_fv.txt
+                   meta_fv.csv
            - results/
+                   meta_fv.csv
+                   weka_output/
+                        fv_best_first_search_code.txt
+                        fv_best_first_search_code_train.txt
+                        fv_best_first_search_word.txt
+                        fv_best_first_search_word_train.txt
 
+
+------------------------------------------
 Program Descriptions :
+------------------------------------------
   create_ngram.py : Creating N-Gram csv files
     input  : resources/fields_speaker.txt, stop-word.txt
     output : 1_gram_ids.txt, 2_gram_ids.txt, 3_gram_ids.txt
@@ -53,6 +76,7 @@ Program Descriptions :
     output : results/code_fv.csv
 	         results/code_fv_d.arff (dense arff)
 			 results/code_fv.arff (sparse arff)
+
   dataset_split.py
     description: split data set into training and testing part
 	input: results/code_fv.csv, results/word_fv.csv, resources/meta_fv.csv
@@ -72,7 +96,9 @@ Program Descriptions :
              results/weka_output/fv_best_first_search_code_train.txt
              results/weka_output/fv_best_first_search_word_train.txt
 			 results/code_fv.csv, results/word_fv.csv, results/meta_fv.csv
-			 results/code_fv_train.csv, results/word_fv_train.csv, results/meta_fv_train.csv, results/code_fv_test.csv, results/word_fv_test.csv, results/meta_fv_test.csv
+			 results/code_fv_train.csv, results/word_fv_train.csv, 
+             results/meta_fv_train.csv, results/code_fv_test.csv, 
+             results/word_fv_test.csv, results/meta_fv_test.csv
     output : 
 	final feature extracted for our improved method in Experiment 1
 	         results/merge_fv_N20.arff 
@@ -94,36 +120,70 @@ Program Descriptions :
 	         results/word_fv.arff   (sparse arff)
 
 
-How to run the programs :
+------------------------------------------
+Quick Running :
+------------------------------------------
+If your system is properly configured, and the zipped file is well uncompressed,
+you can run this program through following process more easily.
+If you receive any error, please check "details of the program" or contact us.
 
 1. Build pre-processed resource file
-   Clean the corpus as describe in the preprocessing part in the report
-
-2. Feature extraction
-2.1 Generate word-based ngram feature
-1) Build ngram csv & ngram id files 
-   Just run "./create_ngram.py" without any arguments.
-   # ./create_ngram.py 
-2) Convert ngram csv files to arff files for weka
-   run: "./process_ngram.py"
-
-2.2 Genearte code-based ngram feature
-    run: "./code_based_feature.py"
-
-2.3 Split data into training and testing set
-    run: "./dataset_split.py"
+   "resources/fields_speaker.txt" is included.
+   
+2. Feature extraction 
+  It will take several minutues. 
+  run: ./feature_extract.py
 
 3. Feature selection
-3.1 In Weka GUI explorer -> Select attributes -> Use best first search and CfsSubsetEval and 10-crossvalidation for feature selection.
- input: 
-  1) Use the entire data set: code_fv.arff, word_fv.arff
-  2) Use training set: code_fv_train.arff, word_fv.arff
- output:
-  Copy Weka's output into the following .txt files
-  results/weka_output/fv_best_first_search_code.txt
-  results/weka_output/fv_best_first_search_word.txt
-  results/weka_output/fv_best_first_search_code_train.txt
-  results/weka_output/fv_best_first_search_word_train.txt
+  3.1 In Weka GUI 
+  The result from the Weka is already saved in "results/weka_outupt" directory
+      results/weka_output/fv_best_first_search_code.txt
+      results/weka_output/fv_best_first_search_word.txt
+      results/weka_output/fv_best_first_search_code_train.txt
+      results/weka_output/fv_best_first_search_word_train.txt
+ 
+  3.2 Extract the most informative feature from weka's output.
+    run: "./feature_selection.py"
+
+4. Using Weka
+   See "Details of the program" part.
+
+
+------------------------------------------
+Details of the programs :
+------------------------------------------
+1. Build pre-processed resource file
+   Clean the corpus as describe in the preprocessing part in the report
+   The file, "fields_speaker.txt", is already in "resources" directory.
+
+2. Feature extraction
+   Run "python ./feature_extract.py".
+   Then following tasks will run as a batch job.
+   It will takes several minutes.
+
+    2.1 Generate word-based ngram feature
+    1) Build ngram csv & ngram id files 
+       run: "./create_ngram.py"
+    2) Convert ngram csv files to arff files for weka
+       run: "./process_ngram.py"
+
+    2.2 Genearte code-based ngram feature
+        run: "./code_based_feature.py"
+
+    2.3 Split data into training and testing set
+        run: "./dataset_split.py"
+
+3. Feature selection
+  3.1 In Weka GUI explorer -> Select attributes -> Use best first search and CfsSubsetEval and 10-crossvalidation for feature selection.
+    input: 
+      1) Use the entire data set: code_fv.arff, word_fv.arff
+      2) Use training set: code_fv_train.arff, word_fv.arff
+    output:
+      Copy Weka's output into the following .txt files
+      results/weka_output/fv_best_first_search_code.txt
+      results/weka_output/fv_best_first_search_word.txt
+      results/weka_output/fv_best_first_search_code_train.txt
+      results/weka_output/fv_best_first_search_word_train.txt
   
 3.2 Extract the most informative feature from weka's output.
     run: "./feature_selection.py"

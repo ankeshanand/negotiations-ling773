@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # split all samples into training and testing set
 
 import csv
