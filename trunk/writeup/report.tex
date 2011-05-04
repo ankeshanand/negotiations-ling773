@@ -65,16 +65,21 @@
 
 
 \section{Introduction}
-brief introduction
-Who is in this group. Optionally, a rough breakdown of people's roles in the project,
+
+The members of this group are Peng Ye, Youngil Kim, and Olivia Buzek.
+
 \section{Preprocessing}
+
+The data was lowercased, punctuation removed, with non-ASCII characters removed, and tokenized.  In these experiments, we restricted ourselves to the 60 dyads for which a joint profit was reported in the original Imai and Gelfand work.
 
 \section{Feature extraction}
 In this section, we will introduce three types of features that are extracted for predicting joint-profit.
 \subsection{Meta information}
 
+***
+
 \subsection{Code-based N-Gram feature}
-In our data set, every thought unit is carefully coded by social scientist. The code of a thought unit is like a summary about this thought unit. It helps us to understand the functionality of a thought unit. Some code indicates positive interaction between speakers, for example, 'RP' means positive reaction; some code indicates negative interaction, for example, 'RN' means negative reaction. Intuitively, negative or positive interaction should have high correlation with joint profit, thus thought unit code is informative feature for predicting joint profit. The second type of feature we use is though unit code based feature. Consider a dyad as a sequence of code, we then extract code-based unigram and bigram as our featurs. Specifically, for each dyad we extract the following features:
+In our data set, every thought unit is carefully coded by a social scientist. The code of a thought unit is like a summary about this thought unit. It helps us to understand the functionality of a thought unit. Some code indicates positive interaction between speakers, for example, 'RP' means positive reaction; some code indicates negative interaction, for example, 'RN' means negative reaction. Intuitively, negative or positive interaction should have high correlation with joint profit, thus thought unit code is informative feature for predicting joint profit. The second type of feature we use is though unit code based feature. Considering a dyad as a sequence of codes, we then extract code-based unigram and bigram as our features. Specifically, for each dyad we extract the following features:
 \begin{itemize}
 \item Unigram based features:
 \begin{itemize}
@@ -154,7 +159,7 @@ By using counted n-grams, we created n-gram feature file which can be converted 
 We made three n-gram feature files for each category, Wine, Grocery, and all dialogues.
 \end{itemize}
 
-In our experiment, we actually used only the n-gram extracted from the entire dyad only. We have a total of 5754 word-based ngram features.
+In our experiment, we actually used only the n-gram extracted from entire dyad only. We have a total of 5754 word-based ngram features.
 
 \section{Regression}
 \subsection{Feature Selection}
@@ -195,28 +200,29 @@ We extract the top 20 most informative code-based features and word-based featur
 \subsection{Regression Algorithms}
 We used three different types of regression methods provided in Weka for predicting joint profit.
 \begin{itemize}
-\item weka.classifiers.functions.SMOreg \cite{SMO,SVM}: support vector machine for regression, and we use RBF kernel. 
+\item weka.classifiers.functions.SMOreg: support vector machine for regression, and we use RBF kernel. \cite{SVM} \cite{SMO}
 \item weka.classifiers.functions.LinearRegression: using linear regression for prediction.
-\item weka.classifiers.meta.Bagging + weka.classifiers.trees.REPTree \cite{bagging}: bagging predictor based on REPTree which builds a regression tree using information gain.
+\item weka.classifiers.meta.Bagging + weka.classifiers.trees.REPTree: bagging predictor based on REPTree which builds a regression tree using information gain. \cite{bagging}
 \end{itemize}
 
 \subsection{Evaluation Metrics}
 The following metrics are used to evaluate the proposed method.
 
-1. Correlation coefficient (CC)
+\begin{enumerate}
+\item Correlation coefficient (CC)
 
-2. Mean absolute error (MAE)
+\item Mean absolute error (MAE)
 
-3. Root mean squared error (RMSE)
+\item Root mean squared error (RMSE)
 
-4. Relative absolute error (RAE)
+\item Relative absolute error (RAE)
 
-5. Root relative squared error (RRSE)
-
+\item Root relative squared error (RRSE)
+\end{enumerate}
 
 \section{Experiment results}
-In this section, we will show the experimental results using the features (49-by-1 vectors) obtained through the feature selection process and the three different regression methods. This result is compared to a baseline experiment, where code-based unigram features and meta information are directly used to form a 241-by-1 feature vector (without further feature selection process) for each dyad. Our experimental results show that using those selected features, we can achieve better performance. We did two groups of experiments:
- 
+In this section, we will show the experimental results using the features obtained through the feature selection process and the three different regression methods. This result is compared to a baseline experiment, where code-based unigram features and meta information are directly used to form a 241-by-1 feature vector (without further feature selection process) for each dyad. Our experimental results show that using those selected features, we can achieve better performance. We did two groups of experiments:
+
 1) In the first experiment, the improved method uses feature obtained by running feature selection on the entire dataset and it is compared to baseline method described above. As is shown in Table \ref{tab:result1} and Table \ref{tab:result2}, the improved method consistently performs better than the baseline method when use SVM for regression. Compared to linear regression and bagging method, SVM regression provide more consistent and better performance.
 
 \begin{table}
@@ -276,6 +282,32 @@ In this experiment, we only used SVM regression and we have the following result
 \end{table}
 
 This result should be compared with the five fold cross-validation result of baseline method. As is shown in Tabel \ref{tab:result3}, although our improved approach still performs better than the baseline approach.
+
+\section{Analysis}
+
+Using all of the regression methods, except when using 5-fold cross validation and linear regression, the selection of features from the wider set developed in this project performed better than any of the baseline experiments, which only considered the metadata features and a simple code-based unigram feature set to represent each dyad.  Using Support Vector Machines led to the most consistently sizable improvement, whether using 10-fold or 5-fold validation.
+
+The use of SVM and this feature selection method makes it possible to predict the joint profit with a correlation of 0.9.  Interestingly, the most informative features for predicting the joint profit involved sequences of mostly factual statements, neutral-tone comments of various kinds, rational argument and statements of priorities.  None of the thought unit codes involving emotion, persuasion or positive / negative tone were very informative for correlation, nor were thought unit codes that had to do with disagreement, making concessions, or off-topic comments.  Consider the most informative feature, percentage-of-(MIN-QR)-turns, referring to the sequence of a general on-task related statement in a neutral tone by one individual, followed by a question about the individual's priorities from the other participant.  Like the rest of the informative features, this feature shows a rational, on-topic, focused discussion.  This suggests that the best way to determine if a negotiation will succeed is by examining how much of their conversation was conducted as a rational discussion.
+
+
+
+% \begin{tabular}{ c c }
+\begin{figure}
+\includegraphics{../results/10fold.png}
+\caption{Results from 10-fold cross-validation.}
+\end{figure}
+%&
+\begin{figure}
+\includegraphics{../results/5fold.png}
+\caption{Results from 5-fold cross-validation.}
+\end{figure}
+% \end{tabular}
+
+\section{Difficulties / Hurdles}
+
+While a large dataset 
+
 \bibliographystyle{IEEEbib}
 \bibliography{refs}
+
 \end{document}
