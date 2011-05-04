@@ -70,16 +70,16 @@ The members of this group are Peng Ye, Youngil Kim, and Olivia Buzek.
 
 \section{Preprocessing}
 
-The data was lowercased, punctuation removed, with non-ASCII characters removed, and tokenized.  In these experiments, we restricted ourselves to the 60 dyads for which a joint profit was reported in the original Imai and Gelfand work.
+The data was lowercased, punctuation removed, with non-ASCII characters removed, and tokenized using Treebank tokenization rules.  Misspellings were not corrected.  In these experiments, we restricted ourselves to the 60 dyads for which a joint profit was reported in the original Imai and Gelfand work.
 
 \section{Feature extraction}
 In this section, we will introduce three types of features that are extracted for predicting joint-profit.
 \subsection{Meta information}
 
-***
+The meta-data features used were the same as those originally used in the Imai and Gelfand experiment.
 
 \subsection{Code-based N-Gram feature}
-In our data set, every thought unit is carefully coded by a social scientist. The code of a thought unit is like a summary about this thought unit. It helps us to understand the functionality of a thought unit. Some code indicates positive interaction between speakers, for example, 'RP' means positive reaction; some code indicates negative interaction, for example, 'RN' means negative reaction. Intuitively, negative or positive interaction should have high correlation with joint profit, thus thought unit code is informative feature for predicting joint profit. The second type of feature we use is though unit code based feature. Considering a dyad as a sequence of codes, we then extract code-based unigram and bigram as our features. Specifically, for each dyad we extract the following features:
+The dataset is annotated by thought unit with a code representing the function of that thought unit in the discussion.  Some code indicates positive interaction between speakers, for example, 'RP' means positive reaction; some code indicates negative interaction, for example, 'RN' means negative reaction. Intuitively, negative or positive interaction should have high correlation with joint profit, thus thought unit code is informative feature for predicting joint profit. The second type of feature we use is though unit code based feature. Considering a dyad as a sequence of codes, we then extract code-based unigrams and bigrams as our features. Specifically, for each dyad we extract the following features:
 \begin{itemize}
 \item Unigram based features:
 \begin{itemize}
@@ -119,33 +119,20 @@ J-S divergence between the unigram distribution over wine dialog and unigram dis
 \end{itemize}
 \end{itemize}
 
-In our corpus, we have 38 code-based unigram and 660 code-based bigram. We extract a total of 5515 code-based features from each dyad.
+In our corpus, we have 38 code-based unigrams and 660 code-based bigrams. We extract a total of 5515 code-based features from each dyad.
 
-It is worth noting that features introduced above are redundant, for example the percentage of a unigram and the number of times a unigram occurred are correlated with each other and are only different by a constant factor, in the initial feature extraction part, we are not going to eliminate those redundant features, instead, we would like to collect as many features as possible and perform feature selection on these features to choose the most informative features. Feature selection would be illustrated in detail in next section.
+We chose to use bigrams as well as unigrams for the code-based features, because it seemed likely that a sequence of events would be more informative than just the instance of an event in the course of a negotiation.
+
+It is worth noting that features introduced above are redundant, for example the percentage of a unigram and the number of times a unigram occurred are correlated with each other and are only different by a constant factor.  In our initial feature extraction, we do not eliminate those redundant features.  Instead, we collect as many features as possible and perform feature selection on these features to choose the most informative features. Feature selection will be illustrated in detail in the next section.
 
 \subsection{Word-based N-Gram feature}
 We extract word-based n-grams through following process.
 \begin{itemize}
 \item Preprocessing with raw data - creating \textit{fields\_speaker.txt}: \newline
-We analyzed \textit{merged\_turns.csv} and \textit{metadata.csv} for creating \textit{fields\_speaker.txt} file. Because some dialogues do not have \textit{joint profit} in \textit{metadata.csv} file, we should rule out those dialogues even though they exist in \textit{merged\_turns.csv} file. In addition, we rearranaged sequence of fields for better looking; the dyid is positioned as the first item.
+We analyzed \textit{merged\_turns.csv} and \textit{metadata.csv} for creating \textit{fields\_speaker.txt} file. Because some dialogues do not have \textit{joint profit} in \textit{metadata.csv} file, we should rule out those dialogues even though they exist in \textit{merged\_turns.csv} file. In addition, we rearranged the sequence of fields for better readability.  The dyid is now positioned as the first item.
 
-\item Tokeninzing with whole dialog files: \newline
-The raw data contains many special characters and not yet tokenized for creating n-grams. Basically, we used Treebank tokenization and this can be found in \textit{http://www.cis.upenn.edu/$\sim$treebank/tokenization.html}. Following list shows a part of the tokenization rules.
-\begin{itemize}
-\item most punctuation is split from adjoining words.
-\item verb contractions and the Anglo-Saxon genitive of nouns are split into their component morphemes, and each morpheme is tagged separately.
-\begin{itemize}
-\item Examples
-\begin{itemize}
-\item children's \textrightarrow children 's
-\item I'm \textrightarrow I 'm
-\end{itemize}
-\end{itemize}
-This tokenization allows us to analyze each component separately.\newline
-In addition, we need to correct some words to see more precise result. For example, some speakers omit \textit{question mark} or \textit{apostrophe}, and sometimes there are several special characters which is not interpretable in plain text. You can see the detailed conversion in \textit{tokenize} function in \textit{create\_ngram.py}.
-\end{itemize}
 \item Count n-grams and Create n-gram ID:\newline
-After tokenizing, we count number of n-grams to see the characteristics of each dialogue. For counting ngrams, we used \textit{count.pl} in Ted Pedersen Ngram Statics Package with general stop words because stop words can hide real characteristics of n-grams. We seperately count n-grams for Wine, Grocery, and all dialogues for seeing the characteristics of each group of speakers. Also, we count n-grams per each dyad too. \newline
+After tokenizing, we count number of n-grams to see the characteristics of each dialogue. To counting ngrams, we used \textit{count.pl} in Ted Pedersen Ngram Statics Package with general stop words, since stop words are likely not informative. We separately count n-grams for Wine, Grocery, and all dialogues for seeing the characteristics of each group of speakers. N-grams were also computed for each dyad. \newline
 In addition, we created n-gram id files to express ngrams. For example, \textit{grand opening date} which is one of trigram is expressed as \textit{3-0001}. By using this ngram id, we can save memory and storage for analyzing whole data.
 \item Make n-gram feature file:\newline
 By using counted n-grams, we created n-gram feature file which can be converted into an ARFF format, input format of Weka. Each row in the file contains n-gram information of each dyad. The first column shows the \textit{dyID}, and the following colums show ngram id and the number of ngrams in the dialogues. Following example shows a part of the feature file.
@@ -164,7 +151,7 @@ In our experiment, we actually used only the n-gram extracted from entire dyad o
 \section{Regression}
 \subsection{Feature Selection}
 \label{sec:fv_selection}
-Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. In our experiment, we extracted a large number of features, however, the total number of instances in only 61, without feature selection, the training would be very slow. In Weka, we use 'BestFirst' as search method and use 'CfsSubsetEval' as attribute evaluator for finding the most informative features. As is explained in Weka, 'CfsSubsetEval' evaluates ``the worth of a subset of attributes by considering the individual predictive ability of each feature along with the degree of redundancy between them'' and 'BestFirst' searches ``the space of attribute subsets by greedy hillclimbing augmented with a backtracking facility. Setting the number of consecutive non-improving nodes allowed controls the level of backtracking done.'' In our experiment, best first search start with the full set of attributes and search backward. The top ten best word based ngram feature is shown in Table.\ref{tab:selected_ngram} and the top ten best code based ngram feature is shown in Table. In this table, ``percentage-of-(MIN-QR)-turns'' means the percentage of the bigram of MIN-QR extracted from turning points of a dyad.
+Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. In our experiment, we extracted a large number of features.  To decrease the time it would take to train, and to find out what the most useful features were, we used a feature selection process. In Weka, we use 'BestFirst' as the search method and use 'CfsSubsetEval' as the attribute evaluator to finding the most informative features. As is explained in Weka, 'CfsSubsetEval' evaluates ``the worth of a subset of attributes by considering the individual predictive ability of each feature along with the degree of redundancy between them'' and 'BestFirst' searches ``the space of attribute subsets by greedy hillclimbing augmented with a backtracking facility. Setting the number of consecutive non-improving nodes allowed controls the level of backtracking done.'' In our experiment, the best first search started with the full set of attributes and searched backward. The top ten best word-based n-gram features are shown in Table.\ref{tab:selected_ngram} and the top ten best code based ngram feature is shown in Table. In this table, ``percentage-of-(MIN-QR)-turns'' means the percentage of the bigram of MIN-QR extracted from turning points of a dyad, where the conversation switches from one speaker to the other.
 \begin{table}
   \centering
   \caption{THE TOP TEN MOST INFORMATIVE WORD-BASED AND CODE-BASED NGRAM FEATURE}
@@ -195,7 +182,7 @@ percentage-of-(IDN-SBR)-turns & crust grocery\\
   \end{tabular}\label{tab:selected_ngram}
 \end{table}
 
-We extract the top 20 most informative code-based features and word-based feature, together with features extracted from meta information as the final feature. Specifically, we have a total of 49 features for each of the 61 dyads. It should be noticed that feature selection performed on all the available data may lead to overfitting problem, however, we would like to first perform feature selection on all data to see which features are the best for our current dataset. In the following experimental part, we will split dataset into training and testing part and feature selection would be only performed on training data to make sure we won't suffer overfitting problem.
+We extract the top 20 most informative code-based features and word-based feature, together with features extracted from meta information as the final feature. Specifically, we have a total of 49 features for each of the 61 dyads. It should be noted that feature selection performed on all the available data may lead to overfitting.  Thus, we first perform feature selection on all data to see which features are the best for our current dataset. In the following experiments, we split the dataset into training and testing sets, and select features only from the training set.
 
 \subsection{Regression Algorithms}
 We used three different types of regression methods provided in Weka for predicting joint profit.
@@ -221,9 +208,11 @@ The following metrics are used to evaluate the proposed method.
 \end{enumerate}
 
 \section{Experiment results}
-In this section, we will show the experimental results using the features obtained through the feature selection process and the three different regression methods. This result is compared to a baseline experiment, where code-based unigram features and meta information are directly used to form a 241-by-1 feature vector (without further feature selection process) for each dyad. Our experimental results show that using those selected features, we can achieve better performance. We did two groups of experiments:
+In this section, we will show the experimental results using the features obtained through the feature selection process and the three different regression methods. This result is compared to a baseline experiment, where code-based unigram features and meta information are directly used to form a 241-by-1 feature vector (without further feature selection process) for each dyad. Our experimental results show that using those selected features, we can achieve better performance. We did two experiments:
 
-1) In the first experiment, the improved method uses feature obtained by running feature selection on the entire dataset and it is compared to baseline method described above. As is shown in Table \ref{tab:result1} and Table \ref{tab:result2}, the improved method consistently performs better than the baseline method when use SVM for regression. Compared to linear regression and bagging method, SVM regression provide more consistent and better performance.
+\begin{itemize}[1)]
+
+\item In the first experiment, the improved method uses feature obtained by running feature selection on the entire dataset and it is compared to baseline method described above. As is shown in Table \ref{tab:result1} and Table \ref{tab:result2}, the improved method consistently performs better than the baseline method when use SVM for regression. Compared to the linear regression and bagging methods, SVM regression provided more consistent and better performance.
 
 \begin{table}
   \centering
@@ -263,10 +252,10 @@ In this section, we will show the experimental results using the features obtain
   \end{tabular}\label{tab:result2}
 \end{table}
 
-2) In the second experiment, we first split our dataset into training and testing set, where in training set we have 46 dyads and in testing set, we have 15 dyads. We split the dataset in a way such that the distribution of the value of joint profit is ``uniform'' in both training and testing set.
+\item In the second experiment, we first split our dataset into training and testing set, where in training set we have 46 dyads and in testing set, we have 15 dyads. We split the dataset in a way such that the distribution of the value of joint profit is ``uniform'' in both training and testing set.
 We then perform the feature selection procedure mentioned in Section \ref{sec:fv_selection} on training set. The classifier training is also performed solely on training set. We then test the trained model on our testing set.
 
-In this experiment, we only used SVM regression and we have the following result:
+In this experiment, we only used SVM regression and obtained the following result:
 
 \begin{table}
   \centering
@@ -281,7 +270,9 @@ In this experiment, we only used SVM regression and we have the following result
   \end{tabular}\label{tab:result3}
 \end{table}
 
-This result should be compared with the five fold cross-validation result of baseline method. As is shown in Tabel \ref{tab:result3}, although our improved approach still performs better than the baseline approach.
+This result should be compared with the five fold cross-validation result of baseline method. As is shown in Table \ref{tab:result3}, although our improved approach still performs better than the baseline approach.
+
+\end{itemize}
 
 \section{Analysis}
 
@@ -289,7 +280,30 @@ Using all of the regression methods, except when using 5-fold cross validation a
 
 The use of SVM and this feature selection method makes it possible to predict the joint profit with a correlation of 0.9.  Interestingly, the most informative features for predicting the joint profit involved sequences of mostly factual statements, neutral-tone comments of various kinds, rational argument and statements of priorities.  None of the thought unit codes involving emotion, persuasion or positive / negative tone were very informative for correlation, nor were thought unit codes that had to do with disagreement, making concessions, or off-topic comments.  Consider the most informative feature, percentage-of-(MIN-QR)-turns, referring to the sequence of a general on-task related statement in a neutral tone by one individual, followed by a question about the individual's priorities from the other participant.  Like the rest of the informative features, this feature shows a rational, on-topic, focused discussion.  This suggests that the best way to determine if a negotiation will succeed is by examining how much of their conversation was conducted as a rational discussion.
 
+The weights for the informative features under SVM regression can be seen in Table \ref{tab:ftr_weights}.
 
+\begin{table}
+  \centering
+  \caption{THE TOP TEN MOST INFORMATIVE WORD-BASED AND CODE-BASED NGRAM FEATURE}
+  \begin{tabular}{|c|c| c | c|}
+     \hline
+NEGATIVE & WEIGHT & POSITIVE & WEIGHT \\
+  \hline
+percentage-of-(IP-SF)-grocery & -0.116 & 1-0020 (hours) & 0.2806 \\
+number-of-(IS)-grocery & -0.1193 & percentage-of-(OM)-grocery & 0.2691 \\
+cultural_intelligence & -0.1652 & 1-1800 (luxurious) & 0.2121 \\
+openness & -0.1705 & 1-0091 (pretty) & 0.1656 \\
+percentage-of-(SBR-SF)-overall & -0.1726 & percentage-of-(MIN-IR)-wine & 0.1561 \\
+percentage-of-(IDN-SBR)-turns & -0.1861 & 1-0090 (great) & 0.1385 \\
+1-0483 (drinks) & -0.2473 & percentage-of-(MIN-QR)-turns & 0.1314 \\
+percentage-of-(SF)-overall & -0.2476 & extroversion & 0.1095 \\
+1-0177 (low) & -0.3044 & 2-0004 (renovation costs ) & 0.1047 \\
+percentage-of-(IP)-overall & -0.3816 & & \\
+  \hline
+  \end{tabular}\label{tab:ftr_weights}
+\end{table}
+
+From this, we can see that, as Imai and Gelfand discovered, cultural intelligence and openness had little to do with a successful negotiation.  In fact, we see instead that the sorts of statements made seemed to have more bearing on success, as well as which words were used, to a degree.  The unigrams which contributed to success seemed to have to do with expressing convincing or positive emotions (luxurious, pretty, great), or simple facts (hours, renovation costs).  The only metadata feature which contributed was extroversion.  (It is possible that in this experiment, task-related words such as ``drinks", ``hours", and others should have been treated as stop-words, given that almost every dyad could easily contain those words.)  Also seemingly contributing to success was talking about agreement and priorities: ``OM" refers to having secure agreement; ``IR" to providing information about priorities; and ``QR" to a question about priorities.  The neutral emotions and factual statements expressed in a high percentage contributed negatively to success.
 
 % \begin{tabular}{ c c }
 \begin{figure}
@@ -303,9 +317,17 @@ The use of SVM and this feature selection method makes it possible to predict th
 \end{figure}
 % \end{tabular}
 
+\section{Conclusions}
+
+We can draw two sets of conclusions from this experiment.  One is about the validity of the methods used, and the other is about how to conduct a negotiation.
+
+If performing this experiment again, it seems that using SVM and the set of features used in this experiment produces fairly reliable results.  This method could also illuminate what is important for success in other types of conversations, discussions or negotiations.
+
+As for the social conclusions, it seems that a negotiation between people of different cultures is best conducted by being very clear on priorities and agreement, as well as staying task-focused.  Whether positive or negative emotions are expressed does not seem to have much of a swaying force.
+
 \section{Difficulties / Hurdles}
 
-While a large dataset 
+While a large dataset might have been problematic in terms of the number of experiments we would be able to run, a dataset this small makes it difficult to draw meaningful conclusions.
 
 \bibliographystyle{IEEEbib}
 \bibliography{refs}
