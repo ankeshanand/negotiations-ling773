@@ -9,7 +9,8 @@ python & perl could be run without specifying any path.
 
 We tested the programs on windows system with cygwin, and perl & python are 
 installed in "/usr/bin".
-
+In fact, most environment using cygwin is similar to linux system,
+if you use linux, the result would be same with ours. 
 
 ------------------------------------------
 Dependencies :
@@ -19,9 +20,9 @@ Dependencies :
   We installed Weka 3.6.4 for processing ARFF files.
   Please copy "weka.jar" and "weka-src.jar" to "code" directory.
 
-  Make sure Ted Perdersen's Ngram Statics Package is installed, and the "bin"
-  directory exists in PATH. So, you should be able to run "count.pl" without
-  specifiying any paths. ( it is used in "create_ngram.py" )
+  Make sure Ted Perdersen's Ngram Statics Package is installed, and add "bin"
+  directory into PATH. So, you should be able to run "count.pl" without
+  specifying any paths. ( it is used in "create_ngram.py" )
 
   Before running the program you should check the directory structure.
   All the programs should be in "code" directory and "resources" directory
