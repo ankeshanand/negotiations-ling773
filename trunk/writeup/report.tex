@@ -154,11 +154,12 @@ By using counted n-grams, we created n-gram feature file which can be converted 
 We made three n-gram feature files for each category, Wine, Grocery, and all dialogues.
 \end{itemize}
 
-In our experiment, we actually used only the n-gram extracted from entire dyad only. We have a total of 5754 word-based ngram features.
+In our experiment, we actually used only the n-gram extracted from the entire dyad only. We have a total of 5754 word-based ngram features.
 
 \section{Regression}
 \subsection{Feature Selection}
-Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. In Weka, we use 'BestFirst' as search method and use 'CfsSubsetEval' as attribute evaluator for finding the most informative features. As is explained in Weka, 'CfsSubsetEval' evaluates ``the worth of a subset of attributes by considering the individual predictive ability of each feature along with the degree of redundancy between them'' and 'BestFirst' searches ``the space of attribute subsets by greedy hillclimbing augmented with a backtracking facility. Setting the number of consecutive non-improving nodes allowed controls the level of backtracking done.'' In our experiment, best first search start with the full set of attributes and search backward. The top ten best word based ngram feature is shown in Table.\ref{tab:selected_ngram} and the top ten best code based ngram feature is shown in Table. In this table, ``percentage-of-(MIN-QR)-turns'' means the percentage of the bigram of MIN-QR extracted from turning points of a dyad.
+\label{sec:fv_selection}
+Feature subset selection is a process of identifying the most informative features and removing irrelevant and redundant features. In our experiment, we extracted a large number of features, however, the total number of instances in only 61, without feature selection, the training would be very slow. In Weka, we use 'BestFirst' as search method and use 'CfsSubsetEval' as attribute evaluator for finding the most informative features. As is explained in Weka, 'CfsSubsetEval' evaluates ``the worth of a subset of attributes by considering the individual predictive ability of each feature along with the degree of redundancy between them'' and 'BestFirst' searches ``the space of attribute subsets by greedy hillclimbing augmented with a backtracking facility. Setting the number of consecutive non-improving nodes allowed controls the level of backtracking done.'' In our experiment, best first search start with the full set of attributes and search backward. The top ten best word based ngram feature is shown in Table.\ref{tab:selected_ngram} and the top ten best code based ngram feature is shown in Table. In this table, ``percentage-of-(MIN-QR)-turns'' means the percentage of the bigram of MIN-QR extracted from turning points of a dyad.
 \begin{table}
   \centering
   \caption{THE TOP TEN MOST INFORMATIVE WORD-BASED AND CODE-BASED NGRAM FEATURE}
@@ -194,9 +195,9 @@ We extract the top 20 most informative code-based features and word-based featur
 \subsection{Regression Algorithms}
 We used three different types of regression methods provided in Weka for predicting joint profit.
 \begin{itemize}
-\item weka.classifiers.functions.SMOreg: support vector machine for regression, and we use RBF kernel.
+\item weka.classifiers.functions.SMOreg \cite{SMO,SVM}: support vector machine for regression, and we use RBF kernel. 
 \item weka.classifiers.functions.LinearRegression: using linear regression for prediction.
-\item weka.classifiers.meta.Bagging + weka.classifiers.trees.REPTree: bagging predictor based on REPTree which builds a regression tree using information gain.
+\item weka.classifiers.meta.Bagging + weka.classifiers.trees.REPTree \cite{bagging}: bagging predictor based on REPTree which builds a regression tree using information gain.
 \end{itemize}
 
 \subsection{Evaluation Metrics}
@@ -214,7 +215,10 @@ The following metrics are used to evaluate the proposed method.
 
 
 \section{Experiment results}
-In this section, we will show the experimental results using the features obtained through the feature selection process and the three different regression methods. This result is compared to a baseline experiment, where code-based unigram features and meta information are directly used to form a 241-by-1 feature vector (without further feature selection process) for each dyad. Our experimental results show that using those selected features, we can achieve better performance. 
+In this section, we will show the experimental results using the features (49-by-1 vectors) obtained through the feature selection process and the three different regression methods. This result is compared to a baseline experiment, where code-based unigram features and meta information are directly used to form a 241-by-1 feature vector (without further feature selection process) for each dyad. Our experimental results show that using those selected features, we can achieve better performance. We did two groups of experiments:
+ 
+1) In the first experiment, the improved method uses feature obtained by running feature selection on the entire dataset and it is compared to baseline method described above. As is shown in Table \ref{tab:result1} and Table \ref{tab:result2}, the improved method consistently performs better than the baseline method when use SVM for regression. Compared to linear regression and bagging method, SVM regression provide more consistent and better performance.
+
 \begin{table}
   \centering
   \caption{EXPERIMENT RESULTS WITH TEN FOLD CROSS-VALIDATION AND FEATURE SELECTION PERFORMED ON ALL DATA}
@@ -223,7 +227,7 @@ In this section, we will show the experimental results using the features obtain
          &       & CC & MAE & RMSE & RAE & RRSE\\
      \hline
      SVM & Baseline & 0.72  & 57.93  & 74.01  & 64.90\%  & 70.44\%\\
-         & Improved & 0.90  & 43.03  & 53.25  & 48.20\%  & 50.68\%\\
+         & Improved & \textbf{0.90}  & \textbf{43.03}  & \textbf{53.25}  & \textbf{48.20\%}  & \textbf{50.68\%}\\
      \hline
   Linear & Baseline &  0.71 & 64.32  & 86.42  & 72.05\% & 82.25\%\\
   Regression & Improved & 0.76  & 69.30  & 88.11  & 77.63\%  & 83.87\%  \\
@@ -242,7 +246,7 @@ In this section, we will show the experimental results using the features obtain
          &       & CC & MAE & RMSE & RAE & RRSE\\
      \hline
      SVM & Baseline & 0.68  & 66.33  & 83.57  & 74.15\%  & 79.63\%\\
-         & Improved & 0.89  & 44.31  & 54.41  & 49.53\%  & 51.85\%\\
+         & Improved & \textbf{0.89}  & \textbf{44.31 } & \textbf{54.41}  & \textbf{49.53\% } & \textbf{51.85\%}\\
      \hline
   Linear & Baseline &  0.67 & 70.47  & 90.95  & 78.77\% & 86.67\%\\
   Regression & Improved & 0.53 & 82.82 & 105.08  & 92.58\%  & 100.13\%  \\
@@ -250,7 +254,28 @@ In this section, we will show the experimental results using the features obtain
   REPTree & Baseline &  0.51 & 73.06  & 89.84  & 81.67\%  & 85.61\%\\
   Bagging & Improved &  0.69 & 62.44  & 78.01  & 69.80\%  & 74.34\%\\
   \hline
-  \end{tabular}\label{tab:result1}
+  \end{tabular}\label{tab:result2}
 \end{table}
 
+2) In the second experiment, we first split our dataset into training and testing set, where in training set we have 46 dyads and in testing set, we have 15 dyads. We split the dataset in a way such that the distribution of the value of joint profit is ``uniform'' in both training and testing set.
+We then perform the feature selection procedure mentioned in Section \ref{sec:fv_selection} on training set. The classifier training is also performed solely on training set. We then test the trained model on our testing set.
+
+In this experiment, we only used SVM regression and we have the following result:
+
+\begin{table}
+  \centering
+  \caption{EXPERIMENT RESULTS FEATURE SELECTION PERFORMED ON TRAINING DATA}
+  \begin{tabular}{|c|c|c|c|c|c|c|}
+     \hline
+         &       & CC & MAE & RMSE & RAE & RRSE\\
+     \hline
+     SVM & Baseline (5-fold c-v)& 0.68  & 66.33  & 83.57  & 74.15\%  & 79.63\%\\
+         & Improved & \textbf{0.76}  & \textbf{61.54 } & \textbf{71.58}  & \textbf{69.65\% } & \textbf{68.69\%}\\
+  \hline
+  \end{tabular}\label{tab:result3}
+\end{table}
+
+This result should be compared with the five fold cross-validation result of baseline method. As is shown in Tabel \ref{tab:result3}, although our improved approach still performs better than the baseline approach.
+\bibliographystyle{IEEEbib}
+\bibliography{refs}
 \end{document}

@@ -26,11 +26,11 @@ Basic directory structure :
            - codes/
                    baseline.py 
                    code_based_feature.py
+				   dataset_split.py
                    create_ngram.py
                    feature_selection.py 
                    global_variable.py 
                    process_ngram.py 
-                   run_prediction.py
                    stop-word.txt
            - resources/
                    fields_speaker.txt
@@ -44,41 +44,108 @@ Program Descriptions :
             dialog_all_ngrams.csv
 
   baseline.py 
-    input  :
-    output :
+    input  : resources/fields_speaker.txt, resources/meta_fv.txt
+    output : results/baseline_fv.csv, results/baseline_fv.arff
 
   code_based_feature.py
-    input  :
-    output :
+    description: generate code-based ngram features
+    input  : resources/fields_speaker.txt, resources/meta_fv.csv
+    output : results/code_fv.csv
+	         results/code_fv_d.arff (dense arff)
+			 results/code_fv.arff (sparse arff)
+  dataset_split.py
+    description: split data set into training and testing part
+	input: results/code_fv.csv, results/word_fv.csv, resources/meta_fv.csv
+	output: results/code_fv_train.csv, results/code_fv_test.csv,
+	        results/word_fv_train.csv, results/word_fv_test.csv,
+			results/meta_fv_train.csv, results/meta_fv_test.csv,
+			results/code_fv_train_d.arff, results/code_fv_test_d.arff,
+	        results/word_fv_train_d.arff, results/word_fv_test_d.arff
+			results/meta_fv_train_d.arff, results/meta_fv_test_d.arff
+			results/code_fv_train.arff, results/code_fv_test.arff,
+	        results/word_fv_train.arff, results/word_fv_test.arff
+			results/meta_fv_train.arff, results/meta_fv_test.arff
 
   feature_selection.py
-    input  :
-    output :
+    input  : results/weka_output/fv_best_first_search_code.txt
+             results/weka_output/fv_best_first_search_word.txt
+             results/weka_output/fv_best_first_search_code_train.txt
+             results/weka_output/fv_best_first_search_word_train.txt
+			 results/code_fv.csv, results/word_fv.csv, results/meta_fv.csv
+			 results/code_fv_train.csv, results/word_fv_train.csv, results/meta_fv_train.csv, results/code_fv_test.csv, results/word_fv_test.csv, results/meta_fv_test.csv
+    output : 
+	final feature extracted for our improved method in Experiment 1
+	         results/merge_fv_N20.arff 
+	final feature extracted for our improved method in Experiment 1
+	         results/merge_fv_train_N20.arff
+			 results/merge_fv_test_N20.arff
 
   global_variable.py
-    input  :
-    output :
+    description: define global variables
+    input  : no input
+    output : no output
 
   process_ngram.py
-    input  :
-    output :
+    description: generate word-based ngram feature
+    input  : results/dialog_all_ngrams.csv
+	         resources/meta_fv.csv
+    output : results/word_fv.csv 
+	         results/word_fv_d.arff (dense arff)
+	         results/word_fv.arff   (sparse arff)
 
-  run_prediction.py
-    input  :
-    output :
 
 How to run the programs :
 
 1. Build pre-processed resource file
-   <Peng : how to create fields_speaker.txt> 
+   Clean the corpus as describe in the preprocessing part in the report
 
-2. Build ngram csv & ngram id files 
-   Just runt "./create_ngram.py" without any arguments.
+2. Feature extraction
+2.1 Generate word-based ngram feature
+1) Build ngram csv & ngram id files 
+   Just run "./create_ngram.py" without any arguments.
    # ./create_ngram.py 
+2) Convert ngram csv files to arff files for weka
+   run: "./process_ngram.py"
 
-3. Build ARFF files
+2.2 Genearte code-based ngram feature
+    run: "./code_based_feature.py"
 
+2.3 Split data into training and testing set
+    run: "./dataset_split.py"
+
+3. Feature selection
+3.1 In Weka GUI explorer -> Select attributes -> Use best first search and CfsSubsetEval and 10-crossvalidation for feature selection.
+ input: 
+  1) Use the entire data set: code_fv.arff, word_fv.arff
+  2) Use training set: code_fv_train.arff, word_fv.arff
+ output:
+  Copy Weka's output into the following .txt files
+  results/weka_output/fv_best_first_search_code.txt
+  results/weka_output/fv_best_first_search_word.txt
+  results/weka_output/fv_best_first_search_code_train.txt
+  results/weka_output/fv_best_first_search_word_train.txt
+  
+3.2 Extract the most informative feature from weka's output.
+    run: "./feature_selection.py"
+	this generate: 
+			 results/merge_fv_N20.arff
+	         results/merge_fv_train_N20.arff
+			 results/merge_fv_test_N20.arff
 
 4. Using Weka
+4.1 Experiment 1
+   In Weka GUI explorer:
+   Load results/merge_fv_N20.arff
+   Remove 'ID', 'profit.diff' from attributes list
+   Then use: SVM with RBF kernel, linear regression, Bagging three methods for regression
+   With 10-fold and 5-fold cross-validation
+4.2 Experiment 2
+   In Weka GUI explorer:
+   Load results/merge_fv_train_N20.arff
+   Remove 'ID', 'profit.diff' from attributes list
+4.3 Baseline 
+   In Weka GUI explorer:
+   Load results/baseline_fv.arff
+   Remove 'ID', 'profit.diff' from attributes list
 
 
